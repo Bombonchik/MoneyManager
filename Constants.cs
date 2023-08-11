@@ -5,11 +5,11 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace ProsperDaily
+namespace MoneyManager
 {
      public static class Constants
      {
-          private const string DBFileName = "ProsperDaily.db3";
+          private const string DBFileName = "MoneyManager.db3";
 
           public const SQLiteOpenFlags Flags =
                SQLiteOpenFlags.ReadWrite |

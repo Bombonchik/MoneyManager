@@ -5,7 +5,7 @@ using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace ProsperDailyTests.Abstractions
+namespace MoneyManager.Abstractions
 {
      public interface IBaseRepository<T> : IDisposable
           where T : TableData, new()

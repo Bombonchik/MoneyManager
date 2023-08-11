@@ -4,11 +4,36 @@
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
     xmlns:local="clr-namespace:MoneyManager"
-    Shell.FlyoutBehavior="Disabled">
+    xmlns:views="clr-namespace:MoneyManager.MVVM.Views"
+    xmlns:mauiControls="http://schemas.microsoft.com/dotnet/2022/maui/toolkit">
 
-    <ShellContent
-        Title="Home"
-        ContentTemplate="{DataTemplate local:MainPage}"
-        Route="MainPage" />
+    <TabBar>
+        <ShellContent
+            Title="Accounts"
+            ContentTemplate="{DataTemplate views:AccountsView}"
+            Icon="account_balance.svg"/>
+        <ShellContent
+            Title="Trans."
+            ContentTemplate="{DataTemplate views:TransactionsView}"
+            Icon="receipt_long.svg"/>
+        <ShellContent
+            IsEnabled="True"
+            Title="Add"
+            ContentTemplate="{DataTemplate views:NewTransactionView}"
+            Icon="add_circle_plus.svg">
+            
+
+
+        </ShellContent>
+        <ShellContent
+            Title="Overview"
+            ContentTemplate="{DataTemplate views:OverviewView}"
+            Icon="bar_chart.svg"/>
+        <ShellContent
+            Title="Settings"
+            ContentTemplate="{DataTemplate views:SettingsView}"
+            Icon="settings.svg"/>
+        
+    </TabBar>
 
 </Shell>

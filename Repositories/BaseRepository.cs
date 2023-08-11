@@ -1,6 +1,5 @@
 ﻿using SQLite;
-using ProsperDailyTests.Abstractions;
-using ProsperDailyTests.MVVM.Models;
+using MoneyManager.Abstractions;
 using SQLiteNetExtensions.Extensions;
 using System;
 using System.Collections.Generic;
@@ -9,7 +8,7 @@ using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace ProsperDailyTests.Repositories
+namespace MoneyManager.Repositories
 {
      public class BaseRepository<T> :
           IBaseRepository<T> where T : TableData, new()

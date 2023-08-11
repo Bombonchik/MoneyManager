@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="MoneyManager.MVVM.Views.AccountsView"
+             Title="AccountsView">
+    <Grid Padding="20">
+        <!-- Row Definitions -->
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+
+        <!-- Total balance, monthly income, monthly expenses, average monthly expenses -->
+        <Grid Grid.Row="0">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+
+            <StackLayout Grid.Column="0">
+                <Label Text="Total Balance" FontAttributes="Bold"/>
+                <Label Text="$0.00" FontSize="Large"/>
+            </StackLayout>
+
+            <StackLayout Grid.Column="1">
+                <Label Text="Monthly Income" FontAttributes="Bold"/>
+                <Label Text="$0.00" FontSize="Large"/>
+            </StackLayout>
+        </Grid>
+
+        <Grid Grid.Row="1">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+
+            <StackLayout Grid.Column="0">
+                <Label Text="Monthly Expenses" FontAttributes="Bold"/>
+                <Label Text="$0.00" FontSize="Large"/>
+            </StackLayout>
+
+            <StackLayout Grid.Column="1">
+                <Label Text="Average Monthly Expenses" FontAttributes="Bold"/>
+                <Label Text="$0.00" FontSize="Large"/>
+            </StackLayout>
+        </Grid>
+
+        <!-- CollectionView for accounts -->
+        <CollectionView Grid.Row="2" Margin="0,20,0,0" ItemsLayout="VerticalGrid, 2"
+                        ItemsSource="{Binding Accounts}">
+            <CollectionView.ItemTemplate>
+                <DataTemplate>
+                    <Grid Padding="10" HeightRequest="100">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                        </Grid.RowDefinitions>
+                        <Label Text="{Binding Name}" FontSize="Medium" Grid.Row="0"/>
+                        <Label Text="{Binding Balance}" FontSize="Medium" Grid.Row="1" HorizontalOptions="EndAndExpand"/>
+                    </Grid>
+                </DataTemplate>
+            </CollectionView.ItemTemplate>
+        </CollectionView>
+
+        <!-- Button to add new account -->
+        <Button Grid.Row="3" Text="Add New Account" Margin="0,20,0,0"/>
+    </Grid>
+</ContentPage>

@@ -1,4 +1,6 @@
-﻿namespace MoneyManager;
+﻿using MoneyManager.MVVM.Views;
+
+namespace MoneyManager;
 
 public partial class App : Application
 {

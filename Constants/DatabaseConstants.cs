@@ -7,7 +7,8 @@ using System.Threading.Tasks;
 
 namespace MoneyManager
 {
-     public static class Constants
+     public static class DatabaseConstants
+
      {
           private const string DBFileName = "MoneyManager.db3";
 

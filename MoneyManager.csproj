@@ -50,11 +50,13 @@
 
 	<ItemGroup>
 	  <None Remove="Resources\Fonts\LibreFranklin-Regular.ttf" />
+	  <None Remove="Resources\Fonts\paymentFont.ttf" />
 	  <None Remove="Resources\Fonts\Roboto-Black.ttf" />
 	  <None Remove="Resources\Images\add_circle_plus.svg" />
 	</ItemGroup>
 
 	<ItemGroup>
+		<PackageReference Include="Bogus" Version="34.0.2" />
 		<PackageReference Include="CommunityToolkit.Maui" Version="5.3.0" />
 		<PackageReference Include="Humanizer" Version="2.14.1" />
 		<PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="7.0.0" />
@@ -86,5 +88,7 @@
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
 	</ItemGroup>
+
+	<ProjectExtensions><VisualStudio><UserProperties XamarinHotReloadDebuggerTimeoutExceptionMoneyManagerHideInfoBar="True" /></VisualStudio></ProjectExtensions>
 
 </Project>

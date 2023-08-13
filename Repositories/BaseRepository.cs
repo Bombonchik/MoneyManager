@@ -19,8 +19,8 @@ namespace MoneyManager.Repositories
           public BaseRepository()
           {
                connection =
-                    new SQLiteConnection(Constants.DatabasePath,
-                    Constants.Flags);
+                    new SQLiteConnection(DatabaseConstants.DatabasePath,
+                    DatabaseConstants.Flags);
                connection.CreateTable<T>();
           }
 

@@ -1,6 +1,7 @@
 ﻿using SQLite;
 using MoneyManager.Abstractions;
 using SQLiteNetExtensions.Extensions;
+using SQLiteNetExtensionsAsync.Extensions;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,142 +11,128 @@ using System.Threading.Tasks;
 
 namespace MoneyManager.Repositories
 {
-     public class BaseRepository<T> :
-          IBaseRepository<T> where T : TableData, new()
-     {
-          SQLiteConnection connection;
-          public string StatusMessage { get; set; }
+    public class BaseRepository<T> :
+        IBaseRepository<T> where T : TableData, new()
+    {
+        SQLiteAsyncConnection connection;
+        public string StatusMessage { get; set; }
 
-          public BaseRepository()
-          {
-               connection =
-                    new SQLiteConnection(DatabaseConstants.DatabasePath,
-                    DatabaseConstants.Flags);
-               connection.CreateTable<T>();
-          }
+        public BaseRepository()
+        {
+            connection =
+                new SQLiteAsyncConnection(DatabaseConstants.DatabasePath,
+                DatabaseConstants.Flags);
+            connection.CreateTableAsync<T>().Wait();
+        }
 
-          public void DeleteItem(T item)
-          {
-               try
-               {
-                    //connection.Delete(item);
-                    connection.Delete(item, true);
-               }
-               catch (Exception ex)
-               {
-                    StatusMessage =
-                         $"Error: {ex.Message}";
-               }
-          }
+        public async Task DeleteItemAsync(T item)
+    {
+            try
+            {
+                //connection.Delete(item);
+                await connection.DeleteAsync(item, true);
+            }
+            catch (Exception ex)
+            {
+                StatusMessage =
+                        $"Error: {ex.Message}";
+            }
+        }
 
-          public void Dispose()
-          {
-               connection.Close();
-          }
+        public void Dispose()
+        {
+            connection.CloseAsync();
+        }
 
-          public T GetItem(int id)
-          {
-               try
-               {
-                    return
-                         connection.Table<T>()
-                         .FirstOrDefault(x => x.Id == id);
-               }
-               catch (Exception ex)
-               {
-                    StatusMessage =
-                         $"Error: {ex.Message}";
-               }
-               return null;
-          }
+        public async Task<T> GetItemAsync(int id)
+        {
+            try
+            {
+                return await connection.Table<T>().FirstOrDefaultAsync(x => x.Id == id);
+            }
+            catch (Exception ex)
+            {
+                StatusMessage = $"Error: {ex.Message}";
+            }
+            return null;
+        }
 
-          public T GetItem(Expression<Func<T, bool>> predicate)
-          {
-               try
-               {
-                    return connection.Table<T>()
-                         .Where(predicate).FirstOrDefault();
-               }
-               catch (Exception ex)
-               {
-                    StatusMessage =
-                         $"Error: {ex.Message}";
-               }
-               return null;
-          }
+        public async Task<T> GetItemAsync(Expression<Func<T, bool>> predicate)
+        {
+            try
+            {
+                return await connection.Table<T>().Where(predicate).FirstOrDefaultAsync();
+            }
+            catch (Exception ex)
+            {
+                StatusMessage = $"Error: {ex.Message}";
+            }
+            return null;
+        }
+        public async Task<List<T>> GetItemsAsync()
+        {
+            try
+            {
+                return await connection.Table<T>().ToListAsync();
+            }
+            catch (Exception ex)
+            {
+                StatusMessage = $"Error: {ex.Message}";
+            }
+            return null;
+        }
 
-          public List<T> GetItems()
-          {
-               try
-               {
-                    return connection.Table<T>().ToList();
-               }
-               catch (Exception ex)
-               {
-                    StatusMessage =
-                         $"Error: {ex.Message}";
-               }
-               return null;
-          }
+        public async Task<List<T>> GetItemsAsync(Expression<Func<T, bool>> predicate)
+        {
+            try
+            {
+                return await connection.Table<T>().Where(predicate).ToListAsync();
+            }
+            catch (Exception ex)
+            {
+                StatusMessage = $"Error: {ex.Message}";
+            }
+            return null;
+        }
 
-          public List<T> GetItems(Expression<Func<T, bool>> predicate)
-          {
-               try
-               {
-                    return connection.Table<T>().Where(predicate).ToList();
-               }
-               catch (Exception ex)
-               {
-                    StatusMessage =
-                         $"Error: {ex.Message}";
-               }
-               return null;
-          }
+        public async Task SaveItemAsync(T item)
+        {
+            int result = 0;
+            try
+            {
+                if (item.Id != 0)
+                {
+                    result = await connection.UpdateAsync(item);
+                    StatusMessage = $"{result} row(s) updated";
+                }
+                else
+                {
+                    result = await connection.InsertAsync(item);
+                    StatusMessage = $"{result} row(s) added";
+                }
+            }
+            catch (Exception ex)
+            {
+                StatusMessage = $"Error: {ex.Message}";
+            }
+        }
 
-          public void SaveItem(T item)
-          {
-               int result = 0;
-               try
-               {
-                    if (item.Id != 0)
-                    {
-                         result =
-                              connection.Update(item);
-                         StatusMessage =
-                              $"{result} row(s) updated";
-                    }
-                    else
-                    {
-                         result = connection.Insert(item);
-                         StatusMessage =
-                              $"{result} row(s) added";
-                    }
+        public async Task SaveItemWithChildrenAsync(T item, bool recursive = false)
+        {
+            await connection.InsertWithChildrenAsync(item, recursive);
+        }
 
-               }
-               catch (Exception ex)
-               {
-                    StatusMessage =
-                         $"Error: {ex.Message}";
-               }
-          }
-
-          public void SaveItemWithChildren(T item, bool recursive = false)
-          {
-               connection.InsertWithChildren(item, recursive);
-          }
-
-          public List<T> GetItemsWithChildren()
-          {
-               try
-               {
-                    return connection.GetAllWithChildren<T>().ToList();
-               }
-               catch (Exception ex)
-               {
-                    StatusMessage =
-                         $"Error: {ex.Message}";
-               }
-               return null;
-          }
-     }
+        public async Task<List<T>> GetItemsWithChildrenAsync()
+        {
+            try
+            {
+                return await connection.GetAllWithChildrenAsync<T>();
+            }
+            catch (Exception ex)
+            {
+                StatusMessage = $"Error: {ex.Message}";
+            }
+            return null;
+        }
+    }
 }

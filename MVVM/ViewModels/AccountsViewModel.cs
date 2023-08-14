@@ -1,4 +1,5 @@
 ﻿using Bogus;
+using Bogus.DataSets;
 using MoneyManager.Constants;
 using MoneyManager.DataTemplates;
 using MoneyManager.MVVM.Models;
@@ -19,40 +20,29 @@ namespace MoneyManager.MVVM.ViewModels
     public class AccountsViewModel
     {
         public AccountDisplay CurrentAccountDisplay { get; set; } = new AccountDisplay();
+        private List<Account> Accounts { get; set; }
+        private List<AccountView> AccountViews { get; set; }
         public int currentAccountNumber = 1;
         
         private static readonly (Color, Color) AccountBackgroundColorRange =  (Color.FromArgb("#49D1E3"), Color.FromArgb("#00008B"));
 
+        public ObservableCollection<AccountDisplay> AccountDisplays { get; set; } = new ObservableCollection<AccountDisplay>();
+
+        public AccountsViewModel() 
+        {
+            _ = InitializeAsync();
+            //FillDataAsync();
+        }
+        private async Task InitializeAsync()
+        {
+            AccountDisplays = await GetAccountDisplaysAsync();
+        }
         public ICommand DeleteAccountCommand =>
             new Command(() =>
             {
 
             });
-        public ObservableCollection<AccountDisplay> AccountDisplays { get; set; } = new ObservableCollection<AccountDisplay>();
 
-        public AccountsViewModel() 
-        {
-            FillData();
-            Debug.WriteLine(CurrentAccountDisplay.ToString());
-        }
-        public Color GetColorFromGradient((Color, Color) colorRange)
-        {
-            Random rnd = new Random();
-
-            // Define the start and end colors of your gradient
-            Color startColor = colorRange.Item1;
-            Color endColor = colorRange.Item2;
-
-            // Generate a random position in the gradient
-            double position = rnd.NextDouble();
-
-            // Calculate the gradient color
-            double r = startColor.Red + position * (endColor.Red - startColor.Red);
-            double g = startColor.Green + position * (endColor.Green - startColor.Green);
-            double b = startColor.Blue + position * (endColor.Blue - startColor.Blue);
-
-            return Color.FromRgb(r, g, b); 
-        }
 
         private void GenerateNewAccount()
         {
@@ -60,7 +50,7 @@ namespace MoneyManager.MVVM.ViewModels
                 .RuleFor(a => a.Name, f =>
                 {
                     var name = f.Company.CompanyName();
-                    return name.Length <= 20 ? name : name.Substring(0, 20);
+                    return name.Length <= 16 ? name : name.Substring(0, 16);
                 })
                 .RuleFor(a => a.Balance, f => f.Finance.Amount())
                 .RuleFor(a => a.Identifier, f => f.Random.AlphaNumeric(10))
@@ -80,7 +70,66 @@ namespace MoneyManager.MVVM.ViewModels
                 Icon = DisplayConstants.IconGlyphs[index]
             };
         }
-        private async void FillData()
+        private async void DeleteAccountAsync()
+        {
+            await App.AccountsRepo.DeleteItemAsync(CurrentAccountDisplay.Account);
+        }
+        private async Task<List<Account>> GetAccountsAsync()
+        {
+            return await App.AccountsRepo.GetItemsAsync();
+        }
+        private async void DeleteAccountViewAsync()
+        {
+            await App.AccountViewsRepo.DeleteItemAsync(CurrentAccountDisplay.AccountView);
+        }
+        private async Task<List<AccountView>> GetAccountsAccountViewsAsync()
+        {
+            return await App.AccountViewsRepo.GetItemsAsync();
+        }
+        public async Task<ObservableCollection<AccountDisplay>> GetAccountDisplaysAsync()
+        {
+            var accounts = await GetAccountsAsync();  // Fetch all accounts from the database
+            var accountViews = await GetAccountsAccountViewsAsync();  // Fetch all account views from the database
+            Accounts = accounts;
+            AccountViews = accountViews;
+            // Create a dictionary for AccountView objects indexed by AccountId
+            Dictionary<int, AccountView>  accountViewDict = accountViews.ToDictionary(av => av.AccountId);
+            
+            var accountDisplays = new ObservableCollection<AccountDisplay>();
+
+            foreach (var account in accounts)
+            {
+                if (accountViewDict.TryGetValue(account.Id, out var accountView))
+                {
+                    accountDisplays.Add(new AccountDisplay
+                    {
+                        Account = account,
+                        AccountView = accountView
+                    });
+                }
+            }
+
+            return accountDisplays;
+        }
+        public Color GetColorFromGradient((Color, Color) colorRange)
+        {
+            Random rnd = new Random();
+
+            // Define the start and end colors of your gradient
+            Color startColor = colorRange.Item1;
+            Color endColor = colorRange.Item2;
+
+            // Generate a random position in the gradient
+            double position = rnd.NextDouble();
+
+            // Calculate the gradient color
+            double r = startColor.Red + position * (endColor.Red - startColor.Red);
+            double g = startColor.Green + position * (endColor.Green - startColor.Green);
+            double b = startColor.Blue + position * (endColor.Blue - startColor.Blue);
+
+            return Color.FromRgb(r, g, b);
+        }
+        private async void FillDataAsync()
         {
             for (int i = 0; i < DisplayConstants.IconGlyphs.Count; i++)
             {
@@ -88,13 +137,15 @@ namespace MoneyManager.MVVM.ViewModels
                 GenerateNewAccount();
                 GenerateNewAccountView();
                 currentAccountNumber++;
-                App.AccountsRepo.SaveItem(CurrentAccountDisplay.Account);
+                await App.AccountsRepo.SaveItemAsync(CurrentAccountDisplay.Account);
+                await App.AccountViewsRepo.SaveItemAsync(CurrentAccountDisplay.AccountView);
                 await Console.Out.WriteLineAsync(App.AccountsRepo.StatusMessage);
-                App.AccountViewsRepo.SaveItem(CurrentAccountDisplay.AccountView);
                 await Console.Out.WriteLineAsync(App.AccountViewsRepo.StatusMessage);
                 AccountDisplays.Add(CurrentAccountDisplay);
                 Debug.WriteLine(CurrentAccountDisplay.ToString());
             }
+
+            
                 
 
                 //new Account
@@ -192,7 +243,6 @@ namespace MoneyManager.MVVM.ViewModels
                     //    Percentage = "5%"
                     //},
 
-            
         }
     }
 }

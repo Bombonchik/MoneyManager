@@ -10,13 +10,13 @@ namespace MoneyManager.Abstractions
      public interface IBaseRepository<T> : IDisposable
           where T : TableData, new()
      {
-          void SaveItem(T item);
-          void SaveItemWithChildren(T item, bool recursive = false);
-          T GetItem(int id);
-          T GetItem(Expression<Func<T, bool>> predicate);
-          List<T> GetItems();
-          List<T> GetItems(Expression<Func<T, bool>> predicate);
-          List<T> GetItemsWithChildren();
-          void DeleteItem(T item);
-     }
+          Task SaveItemAsync(T item);
+          Task SaveItemWithChildrenAsync(T item, bool recursive = false);
+          Task<T> GetItemAsync(int id);
+          Task<T> GetItemAsync(Expression<Func<T, bool>> predicate);
+          Task<List<T>> GetItemsAsync();
+          Task<List<T>> GetItemsAsync(Expression<Func<T, bool>> predicate);
+          Task<List<T>> GetItemsWithChildrenAsync();
+          Task DeleteItemAsync(T item);
+    }
 }

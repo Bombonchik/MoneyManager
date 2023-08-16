@@ -4,7 +4,32 @@
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml">
 
-    <Color x:Key="Primary">#512BD4</Color>
+    <!-- Light Theme Colors -->
+    <Color x:Key="LightPrimaryBackground">#FFFFFF</Color>
+    <!-- Pure White -->
+    <Color x:Key="LightSecondaryBackground">#F5F5F5</Color>
+    <!-- For cards, modals, etc. -->
+    <Color x:Key="LightPrimaryText">#000000</Color>
+    <!-- Black -->
+    <Color x:Key="LightSecondaryText">#555555</Color>
+    <!-- For less important information, subtitles, etc. -->
+    <Color x:Key="LightTertiaryText">#AAAAAA</Color>
+    <!-- For hints, timestamps, etc. -->
+
+    <!-- Dark Theme Colors -->
+    <Color x:Key="DarkPrimaryBackground">#121212</Color>
+    <!-- Near Black -->
+    <Color x:Key="DarkSecondaryBackground">#1E1E1E</Color>
+    <!-- For cards, modals, etc. -->
+    <Color x:Key="DarkPrimaryText">#FFFFFF</Color>
+    <!-- White -->
+    <Color x:Key="DarkSecondaryText">#B0B0B0</Color>
+    <Color x:Key="DarkTertiaryText">#757575</Color>
+    <Color x:Key="LightStrokeColor">#852BD4</Color>
+    <Color x:Key="DarkStrokeColor">White</Color>
+
+
+    <Color x:Key="Primary">#5154E8</Color>
     <Color x:Key="Secondary">#DFD8F7</Color>
     <Color x:Key="Tertiary">#2B0B98</Color>
     <Color x:Key="White">White</Color>

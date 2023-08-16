@@ -56,6 +56,18 @@ namespace MoneyManager.Repositories
             }
             return null;
         }
+        public async Task<T> GetLastItemAsync()
+        {
+            try
+            {
+                return await connection.Table<T>().OrderByDescending(item => item.Id).FirstOrDefaultAsync();
+            }
+            catch (Exception ex)
+            {
+                StatusMessage = $"Error: {ex.Message}";
+            }
+            return null;
+        }
 
         public async Task<T> GetItemAsync(Expression<Func<T, bool>> predicate)
         {

@@ -50,6 +50,8 @@
 
 	<ItemGroup>
 	  <None Remove="Resources\Fonts\LibreFranklin-Regular.ttf" />
+	  <None Remove="Resources\Fonts\Nexa-ExtraLight.ttf" />
+	  <None Remove="Resources\Fonts\Nexa-Heavy.ttf" />
 	  <None Remove="Resources\Fonts\paymentFont.ttf" />
 	  <None Remove="Resources\Fonts\Roboto-Black.ttf" />
 	  <None Remove="Resources\Images\add_circle_plus.svg" />
@@ -88,6 +90,10 @@
 	  <MauiXaml Update="Resources\Styles\AppStyles.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
+	</ItemGroup>
+
+	<ItemGroup>
+	  <Folder Include="Platforms\iOS\Renderers\" />
 	</ItemGroup>
 
 	<ProjectExtensions><VisualStudio><UserProperties XamarinHotReloadDebuggerTimeoutExceptionMoneyManagerHideInfoBar="True" /></VisualStudio></ProjectExtensions>

@@ -7,12 +7,12 @@ using System.Threading.Tasks;
 
 namespace MoneyManager.Converters
 {
-    public class ColorConvertor : IValueConverter
+    internal class TextToCurrency : IValueConverter
     {
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            var color = value.ToString();
-            return Color.FromArgb(color);
+            decimal amount = (decimal)value;
+            return $"$ {amount}";
         }
 
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)

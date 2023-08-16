@@ -19,6 +19,8 @@ public static class MauiProgram
 				fonts.AddFont("OpenSans-Semibold.ttf", "OpenSansSemibold");
                 fonts.AddFont("Roboto-Black.ttf", "Strong");
                 fonts.AddFont("LibreFranklin-Regular.ttf", "Regular");
+                fonts.AddFont("Nexa-ExtraLight.ttf", "NexaLight");
+                fonts.AddFont("Nexa-Heavy.ttf", "NexaHeavy");
                 fonts.AddFont("PaymentFont.ttf", "PaymentFont");
             });
         builder.Services.AddSingleton<BaseRepository<Account>>();
@@ -26,8 +28,9 @@ public static class MauiProgram
         builder.Services.AddSingleton<BaseRepository<Category>>();
         builder.Services.AddSingleton<BaseRepository<Transaction>>();
         builder.Services.AddSingleton<BaseRepository<RecurringTransaction>>();
+        builder.Services.AddSingleton<BaseRepository<CachedAccountsData>>();
 
-
+        //RoundedSwipeItem.Handle();
 #if DEBUG
         builder.Logging.AddDebug();
 #endif

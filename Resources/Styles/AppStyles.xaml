@@ -45,12 +45,76 @@
         Opacity="0.6"
         Radius="15"
         Offset="0,15" />
+    <Shadow
+        x:Key="ButtonShadowBig"
+        Brush="{AppThemeBinding Light={StaticResource Black}, Dark={StaticResource Primary}}"
+        Opacity="1"
+        Radius="1"
+        Offset="4, 4" />
+    <Shadow
+        x:Key="whiteToBlackShadowBig"
+        Brush="Black"
+        Opacity="1"
+        Radius="1"
+        Offset="4, 4" />
+    <Shadow
+        x:Key="whiteToBlackShadowSmall"
+        Brush="Black"
+        Opacity="1"
+        Radius="1"
+        Offset="2, 2" />
+    <Style Class="AccountImageStyle" TargetType="Image">
+        <Setter Property="Grid.Column" Value="0" />
+        <Setter Property="Grid.ColumnSpan" Value="1" />
+        <Setter Property="Grid.Row" Value="0" />
+        <Setter Property="Grid.RowSpan" Value="2" />
+        <Setter Property="VerticalOptions" Value="FillAndExpand" />
+        <Setter Property="HorizontalOptions" Value="Fill" />
+        <Setter Property="Margin" Value="0,0,0,0" />
+        <Setter Property="Aspect" Value="AspectFit" />
+        <Setter Property="Shadow" Value="{StaticResource whiteToBlackShadowBig}" />
+    </Style>
+
+
 
     <Style Class="BalanceRectangle" TargetType="RoundRectangle">
         <Setter Property="CornerRadius" Value="10" />
         <Setter Property="Fill" Value="{StaticResource White}" />
         <Setter Property="StrokeThickness" Value="2" />
         <Setter Property="Shadow" Value="{StaticResource shadow}" />
+    </Style>
+
+    <Style Class="AccountData" TargetType="Label">
+
+        <Setter Property="TextColor" Value="White" />
+        <Setter Property="Shadow" Value="{StaticResource whiteToBlackShadowBig}" />
+        <Setter Property="Margin" Value="-10, 0, -10, 0" />
+        <Setter Property="HorizontalOptions" Value="Center" />
+        <Setter Property="VerticalOptions" Value="Center" />
+        <Setter Property="FontFamily" Value="Regular" />
+    </Style>
+    <Style Class="AccountIdentifingData" TargetType="Label">
+
+        <Setter Property="TextColor" Value="White" />
+        <Setter Property="Shadow" Value="{StaticResource whiteToBlackShadowSmall}" />
+        <Setter Property="HorizontalOptions" Value="End" />
+        <Setter Property="FontFamily" Value="Regular" />
+        
+    </Style>
+    <Style Class="AccountEditingButton" TargetType="Button">
+        <Setter Property="WidthRequest" Value="104"/>
+        <Setter Property="Padding" Value="5"/>
+        <Setter Property="FontFamily" Value="Strong"/>
+        <Setter Property="CornerRadius" Value="25"/>
+        <Setter Property="FontSize" Value="15"/>
+        <Setter Property="Shadow" Value="{StaticResource ButtonShadowBig}"/>
+        <Setter Property="TextColor" Value="{AppThemeBinding Light={StaticResource White}, Dark={StaticResource Primary}}"/>
+    </Style>
+    <Style Class="AccountEditingButtons" TargetType="HorizontalStackLayout">
+        <Setter Property="Margin" Value="0, 10, 0, -10"/>
+        <Setter Property="Spacing" Value="10"/>
+        <Setter Property="VerticalOptions" Value="Center"/>
+        <Setter Property="HorizontalOptions" Value="Center"/>
     </Style>
 
     <Style

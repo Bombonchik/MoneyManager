@@ -6,34 +6,26 @@
     xmlns:local="clr-namespace:MoneyManager"
     xmlns:views="clr-namespace:MoneyManager.MVVM.Views"
     xmlns:mauiControls="http://schemas.microsoft.com/dotnet/2022/maui/toolkit">
-
     <TabBar>
-        <ShellContent
-            Title="Accounts"
-            ContentTemplate="{DataTemplate views:AccountsView}"
-            Icon="account_balance.svg"/>
-        <ShellContent
-            Title="Trans."
-            ContentTemplate="{DataTemplate views:TransactionsView}"
-            Icon="receipt_long.svg"/>
-        <ShellContent
-            IsEnabled="True"
-            Title="Add"
-            ContentTemplate="{DataTemplate views:NewTransactionView}"
-            Icon="add_circle_plus.svg">
-            
+        <Tab Title="Accounts" Icon="account_balance.svg">
+            <ShellContent ContentTemplate="{DataTemplate views:AccountsView}" />
+        </Tab>
 
+        <Tab Title="Trans." Icon="receipt_long.svg">
+            <ShellContent ContentTemplate="{DataTemplate views:TransactionsView}" />
+        </Tab>
 
-        </ShellContent>
-        <ShellContent
-            Title="Overview"
-            ContentTemplate="{DataTemplate views:OverviewView}"
-            Icon="bar_chart.svg"/>
-        <ShellContent
-            Title="Settings"
-            ContentTemplate="{DataTemplate views:SettingsView}"
-            Icon="settings.svg"/>
-        
+        <Tab Title="Add" Icon="add_circle_plus.svg">
+            <ShellContent ContentTemplate="{DataTemplate views:NewTransactionView}" />
+        </Tab>
+
+        <Tab Title="Overview" Icon="bar_chart.svg">
+            <ShellContent ContentTemplate="{DataTemplate views:OverviewView}" />
+        </Tab>
+
+        <Tab Title="Settings" Icon="settings.svg">
+            <ShellContent ContentTemplate="{DataTemplate views:SettingsView}" />
+        </Tab>
     </TabBar>
 
 </Shell>

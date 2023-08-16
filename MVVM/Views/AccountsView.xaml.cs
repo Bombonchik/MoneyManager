@@ -8,15 +8,12 @@ public partial class AccountsView : ContentPage
 	public AccountsView()
 	{
 		InitializeComponent();
-		BindingContext = new AccountsViewModel();
+        NavigationPage.SetHasNavigationBar(this, false);
+        BindingContext = new AccountsViewModel();
 	}
-    protected async override void OnAppearing()
-    {
-        base.OnAppearing();
-        //await Task.Delay(100);
-        //MyCollectionView.InvalidateLayout();
-
-
-    }
+    //protected async override void OnAppearing()
+    //{
+    //    base.OnAppearing();
+    //}
 
 }

@@ -2,6 +2,7 @@
 using Microsoft.Extensions.Logging;
 using MoneyManager.MVVM.Models;
 using MoneyManager.Repositories;
+using MoneyManager.Services;
 
 namespace MoneyManager;
 
@@ -29,6 +30,10 @@ public static class MauiProgram
         builder.Services.AddSingleton<BaseRepository<Transaction>>();
         builder.Services.AddSingleton<BaseRepository<RecurringTransaction>>();
         builder.Services.AddSingleton<BaseRepository<CachedAccountsData>>();
+
+        builder.Services.AddSingleton<CachedAccountsDataService>();
+        builder.Services.AddSingleton<RecurringTransactionsService>();
+
 
         //RoundedSwipeItem.Handle();
 #if DEBUG

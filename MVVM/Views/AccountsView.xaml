@@ -12,7 +12,7 @@
 
     </ContentPage.Resources>
 
-    <Grid Padding="20">
+    <Grid Padding="20" Margin="0, -8, 0, 0">
         <!-- Row Definitions -->
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
@@ -21,32 +21,39 @@
         </Grid.RowDefinitions>
 
         <!-- Total balance, monthly income, monthly expenses, average monthly expenses -->
-        <Frame>
-            <Grid Grid.Row="0" 
-              ColumnDefinitions="*,*"
-              RowDefinitions="*, *">
+        <Border
+            StyleClass="Border25ShadowBlackWhite">
+            <Frame StyleClass="DataFrame"
+                   BorderColor="Transparent">
+                <Grid Grid.Row="0" 
+                  ColumnDefinitions=".53*,.47*"
+                  RowDefinitions="*, *"
+                  Margin="0,0,-6,0"
+                  BindingContext="{Binding CachedAccountsData}">
 
-                <VerticalStackLayout>
-                    <Label Text="Total Balance" FontAttributes="Bold"/>
-                    <Label Text="$0.00" FontSize="Large"/>
-                </VerticalStackLayout>
+                    <VerticalStackLayout>
+                        <Label Text="Total Balance" StyleClass="TotalAccountDataName"/>
+                        <Label Text="{Binding TotalBalance, StringFormat='{0:C}'}" StyleClass="TotalAccountDataAmount"/>
+                    </VerticalStackLayout>
 
-                <VerticalStackLayout Grid.Column="1">
-                    <Label Text="Income" FontAttributes="Bold"/>
-                    <Label Text="$0.00" FontSize="Large"/>
-                </VerticalStackLayout>
+                    <VerticalStackLayout Grid.Column="1">
+                        <Label Text="Income" StyleClass="TotalAccountDataName"/>
+                        <Label Text="{Binding MonthIncome, StringFormat='{0:C}'}" StyleClass="TotalAccountDataAmount"/>
+                    </VerticalStackLayout>
 
-                <VerticalStackLayout Grid.Row="1">
-                    <Label Text="Expenses" FontAttributes="Bold"/>
-                    <Label Text="$0.00" FontSize="Large"/>
-                </VerticalStackLayout>
+                    <VerticalStackLayout Grid.Row="1">
+                        <Label Text="Expenses" StyleClass="TotalAccountDataName"/>
+                        <Label Text="{Binding MonthExpenses, StringFormat='{0:C}'}" StyleClass="TotalAccountDataAmount"/>
+                    </VerticalStackLayout>
 
-                <VerticalStackLayout  Grid.Column="1" Grid.Row="1">
-                    <Label Text="Average Expense" FontAttributes="Bold"/>
-                    <Label Text="$0.00" FontSize="Large"/>
-                </VerticalStackLayout>
-            </Grid>
-        </Frame>
+                    <VerticalStackLayout  Grid.Column="1" Grid.Row="1">
+                        <Label Text="Average Expense" StyleClass="TotalAccountDataName" />
+                        <Label Text="{Binding MonthAverageExpense, StringFormat='{0:C}'}" StyleClass="TotalAccountDataAmount"/>
+                    </VerticalStackLayout>
+                </Grid>
+            </Frame>
+        </Border>
+        
        
 
         <!-- CollectionView for accounts SelectionChangedCommand ="{Binding AccountSelectedCommand}" -->
@@ -85,12 +92,10 @@
                             Margin="0,0,0,-5"
                             StrokeThickness="10"
                             HeightRequest="185"
-                            WidthRequest="185">
+                            WidthRequest="185"
+                            StyleClass="Border25ShadowPrimary">
                             
-                            <Border.StrokeShape>
-                                <RoundRectangle CornerRadius="25,25,25,25"
-                                                />
-                            </Border.StrokeShape>
+                           
                             <Frame Padding="10"
                                
                                CornerRadius="25"

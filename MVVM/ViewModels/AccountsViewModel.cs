@@ -37,7 +37,7 @@ namespace MoneyManager.MVVM.ViewModels
             }
         }
 
-        public CachedAccountsData CashedAccountsData { get; set; }
+        public CachedAccountsData CachedAccountsData { get; set; }
         public object SelectedItem { get; set; }
         private List<Account> Accounts { get; set; }
         private List<AccountView> AccountViews { get; set; }
@@ -60,10 +60,8 @@ namespace MoneyManager.MVVM.ViewModels
             AccountDisplays = await GetAccountDisplaysAsync();
             if (generateNewData)
                 FillDataAsync(AccountDisplays.Count);
-            CashedAccountsData = await GetLastCashedAccountsDataAsync();
-            CashedAccountsData.TotalBalance = RecalculateAllBalances();
-            await App.CashedAccountsDataRepo.SaveItemAsync(CashedAccountsData);
-
+            var currentTotalBalance = RecalculateAllBalances();
+            CachedAccountsData = await App.CachedAccountsDataService.GetSafelyLastCashedAccountsDataAsync(currentTotalBalance);
         }
         private decimal RecalculateAllBalances()
         {
@@ -91,7 +89,7 @@ namespace MoneyManager.MVVM.ViewModels
         {
             await App.AccountsRepo.DeleteItemAsync(CurrentAccountDisplay.Account);
         }
-        private async Task<List<Account>> GetAccountsAsync()
+        public static async Task<List<Account>> GetAccountsAsync()
         {
             return await App.AccountsRepo.GetItemsAsync();
         }
@@ -100,19 +98,12 @@ namespace MoneyManager.MVVM.ViewModels
             await App.AccountViewsRepo.DeleteItemAsync(CurrentAccountDisplay.AccountView);
         }
 
-        private async Task<List<AccountView>> GetAccountsAccountViewsAsync()
+        public static async Task<List<AccountView>> GetAccountsAccountViewsAsync()
         {
             return await App.AccountViewsRepo.GetItemsAsync();
         }
-        private async Task<List<CachedAccountsData>> GetAllCashedAccountsDataAsync()
-        {
-            return await App.CashedAccountsDataRepo.GetItemsAsync();
-        }
-        private async Task<CachedAccountsData> GetLastCashedAccountsDataAsync()
-        {
-            return await App.CashedAccountsDataRepo.GetLastItemAsync();
-        }
-        public async Task<ObservableCollection<AccountDisplay>> GetAccountDisplaysAsync()
+        
+        private async Task<ObservableCollection<AccountDisplay>> GetAccountDisplaysAsync()
         {
             var accounts = await GetAccountsAsync();  // Fetch all accounts from the database
             var accountViews = await GetAccountsAccountViewsAsync();  // Fetch all account views from the database

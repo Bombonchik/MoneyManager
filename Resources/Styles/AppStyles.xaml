@@ -46,10 +46,28 @@
         Radius="15"
         Offset="0,15" />
     <Shadow
-        x:Key="ButtonShadowBig"
+        x:Key="CoolShadow"
         Brush="{AppThemeBinding Light={StaticResource Black}, Dark={StaticResource Primary}}"
         Opacity="1"
         Radius="1"
+        Offset="4, 4" />
+    <Shadow
+        x:Key="CoolShadowBlackWhite"
+        Brush="{AppThemeBinding Light={StaticResource Black}, Dark={StaticResource White}}"
+        Opacity="1"
+        Radius="1"
+        Offset="4, 4" />
+    <Shadow
+        x:Key="CoolShadowBig"
+        Brush="{AppThemeBinding Light={StaticResource Black}, Dark={StaticResource Primary}}"
+        Opacity="0.9"
+        Radius="10"
+        Offset="6, 6" />
+    <Shadow
+        x:Key="CoolShadowBlackWhiteBig"
+        Brush="{AppThemeBinding Light={StaticResource Black}, Dark={StaticResource White}}"
+        Opacity="0.9"
+        Radius="10"
         Offset="4, 4" />
     <Shadow
         x:Key="whiteToBlackShadowBig"
@@ -84,6 +102,34 @@
         <Setter Property="Shadow" Value="{StaticResource shadow}" />
     </Style>
 
+    <Style Class="DataFrame" TargetType="Frame">
+
+        <Setter Property="Padding" Value="14" />
+        <Setter Property="CornerRadius" Value="25" />
+        <Setter Property="BackgroundColor"  Value="{StaticResource Primary}"/>
+        
+
+    </Style>
+    <RoundRectangle
+        x:Key="Rec25"
+        CornerRadius="25,25,25,25"
+        BackgroundColor="Transparent"/>
+
+    <Style Class="Border25ShadowPrimary" TargetType="Border">
+
+        <Setter Property="StrokeShape" Value="{StaticResource Rec25}" />
+        <Setter Property="Shadow" Value="{StaticResource CoolShadowBig}"/>
+        <Setter Property="StrokeThickness" Value="0"/>
+        <Setter Property="BackgroundColor" Value="Transparent"/>
+    </Style>
+    <Style Class="Border25ShadowBlackWhite" TargetType="Border">
+
+        <Setter Property="StrokeShape" Value="{StaticResource Rec25}" />
+        <Setter Property="Shadow" Value="{StaticResource CoolShadowBlackWhiteBig}"/>
+        <Setter Property="StrokeThickness" Value="0"/>
+        <Setter Property="BackgroundColor" Value="Transparent"/>
+    </Style>
+
     <Style Class="AccountData" TargetType="Label">
 
         <Setter Property="TextColor" Value="White" />
@@ -107,7 +153,7 @@
         <Setter Property="FontFamily" Value="Strong"/>
         <Setter Property="CornerRadius" Value="25"/>
         <Setter Property="FontSize" Value="15"/>
-        <Setter Property="Shadow" Value="{StaticResource ButtonShadowBig}"/>
+        <Setter Property="Shadow" Value="{StaticResource CoolShadow}"/>
         <Setter Property="TextColor" Value="{AppThemeBinding Light={StaticResource White}, Dark={StaticResource Primary}}"/>
     </Style>
     <Style Class="AccountEditingButtons" TargetType="HorizontalStackLayout">
@@ -115,6 +161,22 @@
         <Setter Property="Spacing" Value="10"/>
         <Setter Property="VerticalOptions" Value="Center"/>
         <Setter Property="HorizontalOptions" Value="Center"/>
+    </Style>
+
+    <Style Class="TotalAccountDataName" TargetType="Label">
+       
+        <Setter Property="FontSize" Value="20"/>
+        <Setter Property="Shadow" Value="{StaticResource whiteToBlackShadowBig}"/>
+        <Setter Property="FontFamily" Value="Strong"/>
+        <Setter Property="TextColor" Value="{StaticResource White}"/>
+    </Style>
+
+    <Style Class="TotalAccountDataAmount" TargetType="Label">
+        <Setter Property="FontAttributes" Value="Bold"/>
+        <Setter Property="FontFamily" Value="Strong"/>
+        <Setter Property="Shadow" Value="{StaticResource whiteToBlackShadowBig}"/>
+        <Setter Property="FontSize" Value="20"/>
+        <Setter Property="TextColor" Value="{StaticResource White}"/>
     </Style>
 
     <Style
@@ -135,6 +197,7 @@
         <Setter Property="Padding" Value="10,5" />
         <Setter Property="BorderColor" Value="{StaticResource SecondaryColor}" />
     </Style>
+    
 
     <Style
         ApplyToDerivedTypes="True"

@@ -21,6 +21,11 @@
         <Setter Property="Margin" Value="15" />
         <Setter Property="VerticalOptions" Value="Center" />
     </Style>
+    <Style Class="EntryAccountEdit" TargetType="Entry">
+        <Setter Property="FontFamily" Value="Regular" />
+        <Setter Property="FontAttributes" Value="Bold" />
+        <Setter Property="FontSize" Value="18" />
+    </Style>
 
     <Style TargetType="Label">
         <Setter Property="FontFamily" Value="Regular" />

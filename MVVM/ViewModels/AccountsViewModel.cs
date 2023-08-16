@@ -77,6 +77,11 @@ namespace MoneyManager.MVVM.ViewModels
             {
 
             });
+        public ICommand OpenAddNewAccountPageCommand =>
+            new Command(async () =>
+            {
+                await Shell.Current.GoToAsync("addAccountPage");
+            });
         private void OnNewAccountSelected(AccountDisplay previousSelectedAccount, AccountDisplay currentSelectedAccaunt)
         {
             if (previousSelectedAccount is not null)
@@ -157,7 +162,7 @@ namespace MoneyManager.MVVM.ViewModels
                 })
                 .RuleFor(a => a.Balance, f => f.Finance.Amount())
                 .RuleFor(a => a.Identifier, f => f.Random.AlphaNumeric(16))
-                .RuleFor(a => a.Type, f => f.PickRandom(new[] { "Cash", "Card", "Crypto", "Stocks" }))
+                .RuleFor(a => a.Type, f => f.PickRandom(new[] { "Cash", "Card", "Crypto", "Stocks", "Bank Account", "Credit Card", "Saving Account" }))
                 .RuleFor(a => a.AccoutViewId, f => currentAccountNumber)
                 .Generate();
         }

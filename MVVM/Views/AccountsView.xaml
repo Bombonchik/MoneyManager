@@ -125,7 +125,8 @@
                                     <Label 
                                     Text="{Binding Account.Type}" 
                                     StyleClass="AccountIdentifingData"
-                                    Grid.Column="1"     
+                                    Grid.Column="1"   
+                                    HorizontalTextAlignment="End"
                                     VerticalOptions="Center"
                                     FontFamily="Strong"/>
                                     
@@ -162,10 +163,11 @@
         </CollectionView>
 
         <HorizontalStackLayout
-            Grid.Row="3"
+            Grid.Row="2"
             StyleClass="AccountEditingButtons">
             <Button  Text="New Account" 
-                     StyleClass="AccountEditingButton"/>
+                     StyleClass="AccountEditingButton"
+                     Command="{Binding OpenAddNewAccountPageCommand}"/>
             <Button  Text="Edit" 
                      StyleClass="AccountEditingButton"/>
             <Button  Text="Delete" 

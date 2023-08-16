@@ -75,6 +75,9 @@
 	  <MauiXaml Update="MVVM\Views\AccountsView.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
+	  <MauiXaml Update="MVVM\Views\AddAccountView.xaml">
+	    <Generator>MSBuild:Compile</Generator>
+	  </MauiXaml>
 	  <MauiXaml Update="MVVM\Views\NewTransactionView.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>

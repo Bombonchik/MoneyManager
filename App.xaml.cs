@@ -28,7 +28,7 @@ public partial class App : Application
 	{
 		InitializeComponent();
 
-		MainPage = new AppShell();
+		MainPage = new AddAccountView();
         AccountsRepo = accountsRepo;
         AccountViewsRepo = accountViewsRepo;
         CategoriesRepo = categoriesRepo;

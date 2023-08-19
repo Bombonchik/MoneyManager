@@ -8,16 +8,16 @@ namespace MoneyManager;
 
 public static class MauiProgram
 {
-	public static MauiApp CreateMauiApp()
-	{
-		var builder = MauiApp.CreateBuilder();
-		builder
-			.UseMauiApp<App>()
+    public static MauiApp CreateMauiApp()
+    {
+        var builder = MauiApp.CreateBuilder();
+        builder
+            .UseMauiApp<App>()
             .UseMauiCommunityToolkit()
             .ConfigureFonts(fonts =>
-			{
-				fonts.AddFont("OpenSans-Regular.ttf", "OpenSansRegular");
-				fonts.AddFont("OpenSans-Semibold.ttf", "OpenSansSemibold");
+            {
+                fonts.AddFont("OpenSans-Regular.ttf", "OpenSansRegular");
+                fonts.AddFont("OpenSans-Semibold.ttf", "OpenSansSemibold");
                 fonts.AddFont("Roboto-Black.ttf", "Strong");
                 fonts.AddFont("LibreFranklin-Regular.ttf", "Regular");
                 fonts.AddFont("Nexa-ExtraLight.ttf", "NexaLight");
@@ -33,6 +33,7 @@ public static class MauiProgram
 
         builder.Services.AddSingleton<CachedAccountsDataService>();
         builder.Services.AddSingleton<RecurringTransactionsService>();
+        builder.Services.AddSingleton<ColorService>();
 
 
         //RoundedSwipeItem.Handle();
@@ -40,6 +41,6 @@ public static class MauiProgram
         builder.Logging.AddDebug();
 #endif
 
-		return builder.Build();
-	}
+        return builder.Build();
+    }
 }

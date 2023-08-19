@@ -1,13 +1,34 @@
-﻿using SQLite;
+﻿
+/* Unmerged change from project 'MoneyManager (net7.0-windows10.0.19041.0)'
+Before:
+using SQLite;
 using MoneyManager.Abstractions;
-using SQLiteNetExtensions.Extensions;
+After:
+using MoneyManager.Abstractions;
+using SQLite;
+*/
+
+/* Unmerged change from project 'MoneyManager (net7.0-ios)'
+Before:
+using SQLite;
+using MoneyManager.Abstractions;
+After:
+using MoneyManager.Abstractions;
+using SQLite;
+*/
+
+/* Unmerged change from project 'MoneyManager (net7.0-maccatalyst)'
+Before:
+using SQLite;
+using MoneyManager.Abstractions;
+After:
+using MoneyManager.Abstractions;
+using SQLite;
+*/
+using MoneyManager.Abstractions;
+using SQLite;
 using SQLiteNetExtensionsAsync.Extensions;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Linq.Expressions;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace MoneyManager.Repositories
 {
@@ -26,7 +47,7 @@ namespace MoneyManager.Repositories
         }
 
         public async Task DeleteItemAsync(T item)
-    {
+        {
             try
             {
                 //connection.Delete(item);
@@ -145,6 +166,11 @@ namespace MoneyManager.Repositories
                 StatusMessage = $"Error: {ex.Message}";
             }
             return null;
+        }
+
+        public async Task<int> GetCountAsync()
+        {
+            return await connection.Table<T>().CountAsync();
         }
     }
 }

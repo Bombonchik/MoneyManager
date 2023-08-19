@@ -53,8 +53,8 @@
     <Shadow
         x:Key="CoolShadow"
         Brush="{AppThemeBinding Light={StaticResource Black}, Dark={StaticResource Primary}}"
-        Opacity="1"
-        Radius="1"
+        Opacity="0.9"
+        Radius="3"
         Offset="4, 4" />
     <Shadow
         x:Key="CoolShadowBlackWhite"
@@ -124,6 +124,13 @@
 
         <Setter Property="StrokeShape" Value="{StaticResource Rec25}" />
         <Setter Property="Shadow" Value="{StaticResource CoolShadowBig}"/>
+        <Setter Property="StrokeThickness" Value="0"/>
+        <Setter Property="BackgroundColor" Value="Transparent"/>
+    </Style>
+    <Style Class="Border25ShadowPrimarySmall" TargetType="Border">
+
+        <Setter Property="StrokeShape" Value="{StaticResource Rec25}" />
+        <Setter Property="Shadow" Value="{StaticResource CoolShadow}"/>
         <Setter Property="StrokeThickness" Value="0"/>
         <Setter Property="BackgroundColor" Value="Transparent"/>
     </Style>

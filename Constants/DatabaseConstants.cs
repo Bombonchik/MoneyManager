@@ -1,29 +1,24 @@
 ﻿using SQLite;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace MoneyManager
 {
-     public static class DatabaseConstants
+    public static class DatabaseConstants
 
-     {
-          private const string DBFileName = "MoneyManager.db3";
+    {
+        private const string DBFileName = "MoneyManager.db3";
 
-          public const SQLiteOpenFlags Flags =
-               SQLiteOpenFlags.ReadWrite |
-               SQLiteOpenFlags.Create |
-               SQLiteOpenFlags.SharedCache;
+        public const SQLiteOpenFlags Flags =
+             SQLiteOpenFlags.ReadWrite |
+             SQLiteOpenFlags.Create |
+             SQLiteOpenFlags.SharedCache;
 
-          public static string DatabasePath
-          {
-               get
-               {
-                    return Path
-                         .Combine(FileSystem.AppDataDirectory, DBFileName);
-               }
-          }
-     }
+        public static string DatabasePath
+        {
+            get
+            {
+                return Path
+                     .Combine(FileSystem.AppDataDirectory, DBFileName);
+            }
+        }
+    }
 }

@@ -3,6 +3,7 @@ using Bogus.DataSets;
 using MoneyManager.Constants;
 using MoneyManager.DataTemplates;
 using MoneyManager.MVVM.Models;
+using MoneyManager.MVVM.Views;
 using PropertyChanged;
 using System;
 using System.Collections;
@@ -38,15 +39,11 @@ namespace MoneyManager.MVVM.ViewModels
         }
 
         public CachedAccountsData CachedAccountsData { get; set; }
+        private decimal CurrentTotalBalance { get; set; }
         public object SelectedItem { get; set; }
         private List<Account> Accounts { get; set; }
         private List<AccountView> AccountViews { get; set; }
         private AccountDisplay selectedAccountDisplay;
-        private static readonly (Color, Color) AccountBackgroundColorRange =  (Color.FromArgb("#49B6E3"), Color.FromArgb("#0208B4"));
-        Color originalLightColor { get; set; }
-        Color originalDarkColor { get; set; }
-        const string LightStrokeColorName = "LightStrokeColor";
-        const string DarkStrokeColorName = "DarkStrokeColor";
 
 
         public ObservableCollection<AccountDisplay> AccountDisplays { get; set; } = new ObservableCollection<AccountDisplay>();
@@ -58,12 +55,12 @@ namespace MoneyManager.MVVM.ViewModels
         private async Task InitializeAsync(bool generateNewData = false)
         {
             AccountDisplays = await GetAccountDisplaysAsync();
+            CachedAccountsData = await App.CachedAccountsDataService.GetSafelyLastCashedAccountsDataAsync(RecalculateTotalBalance);
             if (generateNewData)
                 FillDataAsync(AccountDisplays.Count);
-            var currentTotalBalance = RecalculateAllBalances();
-            CachedAccountsData = await App.CachedAccountsDataService.GetSafelyLastCashedAccountsDataAsync(currentTotalBalance);
+            //CurrentTotalBalance = RecalculateAllBalances
         }
-        private decimal RecalculateAllBalances()
+        private decimal RecalculateTotalBalance()
         {
             decimal balance = 0;
             foreach (var account in Accounts) 
@@ -71,6 +68,11 @@ namespace MoneyManager.MVVM.ViewModels
                 balance += account.Balance;
             }
             return balance;
+        }
+        private async Task ChangeTotalBalance(decimal totalBalanceChange)
+        {
+            CachedAccountsData.TotalBalance += totalBalanceChange;
+            await App.CachedAccountsDataRepo.SaveItemAsync(CachedAccountsData);
         }
         public ICommand DeleteAccountCommand =>
             new Command(() =>
@@ -80,13 +82,34 @@ namespace MoneyManager.MVVM.ViewModels
         public ICommand OpenAddNewAccountPageCommand =>
             new Command(async () =>
             {
-                await Shell.Current.GoToAsync("addAccountPage");
+                var addAccountPage = new AddAccountView();
+                ((AddAccountViewModel)addAccountPage.BindingContext).OnPageClosedCallback = HandleAddAccountClosed;
+                var stopwatch = new Stopwatch();
+                stopwatch.Start();
+
+                await Shell.Current.Navigation.PushAsync(addAccountPage);
+                stopwatch.Stop();
+                TimeSpan timeTaken = stopwatch.Elapsed;
+
+                Debug.WriteLine($"Time taken for Shell.Current.Navigation.PushAsync(addAccountPage);: {timeTaken.TotalMilliseconds} ms");
             });
-        private void OnNewAccountSelected(AccountDisplay previousSelectedAccount, AccountDisplay currentSelectedAccaunt)
+        private async void HandleAddAccountClosed()
+        {
+            var newAccount = await App.AccountsRepo.GetLastItemAsync();
+            if (newAccount is null)
+                return;
+            if (AccountDisplays.Count == 0 || AccountDisplays.Last().Account.Id != newAccount.Id)
+            {
+                var newAccountView = await App.AccountViewsRepo.GetLastItemAsync();
+                AccountDisplays.Add(new AccountDisplay { Account = newAccount, AccountView = newAccountView });
+                await ChangeTotalBalance(newAccount.Balance);
+            }
+        }
+        private void OnNewAccountSelected(AccountDisplay previousSelectedAccount, AccountDisplay currentSelectedAccount)
         {
             if (previousSelectedAccount is not null)
                 previousSelectedAccount.AccountView.IsSelected = false;
-            currentSelectedAccaunt.AccountView.IsSelected = true;
+            currentSelectedAccount.AccountView.IsSelected = true;
         }
 
         #region DatabaseInteraction
@@ -137,7 +160,7 @@ namespace MoneyManager.MVVM.ViewModels
         #region DataGeneration
         private async void FillDataAsync(int currentAccountNumber)
         {
-
+            decimal totalBalanceChange = 0;
             for (int i = 0; i < DisplayConstants.IconGlyphs.Count; i++)
             {
                 CurrentAccountDisplay = new AccountDisplay(); 
@@ -149,8 +172,10 @@ namespace MoneyManager.MVVM.ViewModels
                 await Console.Out.WriteLineAsync(App.AccountsRepo.StatusMessage);
                 await Console.Out.WriteLineAsync(App.AccountViewsRepo.StatusMessage);
                 AccountDisplays.Add(CurrentAccountDisplay);
+                totalBalanceChange += CurrentAccountDisplay.Account.Balance;
                 Debug.WriteLine(CurrentAccountDisplay.ToString());
             }
+            await ChangeTotalBalance(totalBalanceChange);
         }
         private void GenerateNewAccount(int currentAccountNumber)
         {
@@ -174,29 +199,9 @@ namespace MoneyManager.MVVM.ViewModels
             CurrentAccountDisplay.AccountView = new AccountView
             {
                 AccountId = currentAccountNumber,
-                BackgroundColor = GetColorFromGradient(AccountBackgroundColorRange).ToHex(),
+                BackgroundColor = App.ColorService.GetColorFromGradient(DisplayConstants.AccountBackgroundColorRange).ToHex(),
                 Icon = DisplayConstants.IconGlyphs[index]
             };
-        }
-        #endregion
-        #region ColorMethods
-        public Color GetColorFromGradient((Color, Color) colorRange)
-        {
-            Random rnd = new Random();
-
-            // Define the start and end colors of your gradient
-            Color startColor = colorRange.Item1;
-            Color endColor = colorRange.Item2;
-
-            // Generate a random position in the gradient
-            double position = rnd.NextDouble();
-
-            // Calculate the gradient color
-            double r = startColor.Red + position * (endColor.Red - startColor.Red);
-            double g = startColor.Green + position * (endColor.Green - startColor.Green);
-            double b = startColor.Blue + position * (endColor.Blue - startColor.Blue);
-
-            return Color.FromRgb(r, g, b);
         }
         #endregion
     }

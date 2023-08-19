@@ -12,7 +12,7 @@ namespace MoneyManager.Services
 {
     public class CachedAccountsDataService
     {
-        public async Task<CachedAccountsData> GetSafelyLastCashedAccountsDataAsync(decimal currentTotalBalance)
+        public async Task<CachedAccountsData> GetSafelyLastCashedAccountsDataAsync(Func<decimal> getCurrentTotalBalance)
         {
             var allCachedAccountsData = await GetAllCashedAccountsDataAsync();
             CachedAccountsData cachedAccountsData = new CachedAccountsData();
@@ -22,7 +22,7 @@ namespace MoneyManager.Services
                 cachedAccountsData = new CachedAccountsData
                 {
                     MonthYear = new DateTime(DateTime.Now.Year, DateTime.Now.Month, 1),
-                    TotalBalance = currentTotalBalance,
+                    TotalBalance = getCurrentTotalBalance(),
                     MonthAverageExpense = 0,
                     MonthExpenses = 0,
                     MonthIncome = 0,

@@ -27,6 +27,7 @@ namespace MoneyManager.Constants
             "\uf1f1",
             "\uf1f4"
         };
+        public static readonly (Color, Color) AccountBackgroundColorRange = (Color.FromArgb("#49B6E3"), Color.FromArgb("#0208B4"));
     }
 }
 

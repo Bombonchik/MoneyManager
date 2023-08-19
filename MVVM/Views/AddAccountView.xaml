@@ -3,13 +3,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="MoneyManager.MVVM.Views.AddAccountView"
              Shell.NavBarIsVisible="False">
-    <Grid Padding="20" Margin="0, -8, 0, 0">
-        <!-- Row Definitions -->
-        <Grid.RowDefinitions>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition Height="*"/>
-            <RowDefinition Height="Auto"/>
-        </Grid.RowDefinitions>
+    <Grid Padding="20" Margin="0, -8, 0, 0" RowDefinitions=".55*, .35*, .05*">
 
         <!-- Total balance, monthly income, monthly expenses, average monthly expenses -->
         <Border
@@ -17,105 +11,27 @@
             <Frame StyleClass="DataFrame"
                    BorderColor="Transparent">
                 <VerticalStackLayout>
-                    <VerticalStackLayout >
-                        <Label Text="Fill in your account details" StyleClass="TotalAccountDataName" FontSize="25"/>
-                    </VerticalStackLayout>
-                    <VerticalStackLayout >
-                        <Label Text="Name" StyleClass="TotalAccountDataName" FontFamily="Regular" />
-                        <Entry Placeholder="Print Account Name" Keyboard="Text" StyleClass="EntryAccountEdit" MaxLength="22"/>
-                    </VerticalStackLayout>
+                    <Label Text="Fill in your account details" StyleClass="TotalAccountDataName" FontSize="25"/>
+                    <Label Text="Name" StyleClass="TotalAccountDataName" FontFamily="Regular" />
+                    <Entry Placeholder="Print Account Name" Keyboard="Text" StyleClass="EntryAccountEdit" MaxLength="22"
+                                Text="{Binding NewAccountDisplay.Account.Name}"/>
+                    <Label Text="Balance" StyleClass="TotalAccountDataName" FontFamily="Regular"/>
+                    <Entry Placeholder="Print Account Balance" Keyboard="Numeric" StyleClass="EntryAccountEdit" MaxLength="10"
+                               Text="{Binding NewAccountDisplay.Account.Balance}"/>
 
-                    <VerticalStackLayout >
-                        <Label Text="Balance" StyleClass="TotalAccountDataName" FontFamily="Regular"/>
-                        <Entry Placeholder="Print Account Balance" Keyboard="Numeric" StyleClass="EntryAccountEdit" MaxLength="10"/>
-                    </VerticalStackLayout>
-
-                    <VerticalStackLayout >
-                        <Label Text="Identifier " StyleClass="TotalAccountDataName" FontFamily="Regular"/>
-                        <Label Text="(For example, a credit card number)" StyleClass="TotalAccountDataName" FontSize="12" FontFamily="Regular"/>
-                        <Entry Placeholder="Print Identifier" StyleClass="EntryAccountEdit" MaxLength="256"/>
-                    </VerticalStackLayout>
-
-                    <VerticalStackLayout  >
-                        <Label Text="Type" StyleClass="TotalAccountDataName" FontFamily="Regular"/>
-                        <CollectionView  
-                            Grid.Row="1" Margin="0,10,0,0"
-                            ItemsSource="{Binding AccountTypes}"
-                            SelectionMode="Single"
-                            SelectedItem="{Binding SelectedAccountType}">
-                            <CollectionView.ItemsLayout>
-                                <LinearItemsLayout Orientation="Horizontal"/>
-                            </CollectionView.ItemsLayout>
-                            <CollectionView.ItemTemplate>
-                                <DataTemplate>
-                                    <SwipeView>
-                                        <VisualStateManager.VisualStateGroups>
-                                            <VisualStateGroup Name="CommonStates">
-                                                <VisualState Name="Normal">
-                                                    <VisualState.Setters>
-                                                        <Setter Property="BackgroundColor" Value="Transparent"></Setter>
-                                                    </VisualState.Setters>
-                                                </VisualState>
-                                                <VisualState Name="Selected">
-                                                    <VisualState.Setters>
-                                                        <Setter Property="BackgroundColor" Value="Transparent"></Setter>
-
-                                                    </VisualState.Setters>
-                                                </VisualState>
-
-                                            </VisualStateGroup>
-                                        </VisualStateManager.VisualStateGroups>
-                                        <!-- BInd stroke -->
-                                        <Border 
-                                            Stroke="White" 
-                                            Margin="0,0,0,0"
-                                            StrokeThickness="3"
-                                            
-                                            StyleClass="Border25ShadowPrimary">
-                                            <Frame Padding="10"
-                                                   CornerRadius="25"
-                                                   BackgroundColor="#76A5AF"
-                                                   HorizontalOptions="CenterAndExpand">
-                                                <!-- Main Grid -->
-                                                <Label Text="{Binding .}" 
-                                                       StyleClass="AccountIdentifingData"
-                                                       VerticalOptions="Center" 
-                                                       HorizontalOptions="Center"
-                                                       HorizontalTextAlignment="Center"
-                                                       FontSize="15"
-                                                       Margin="5,0,5,0"/>
-                                            </Frame>
-                                        </Border>
-                                    </SwipeView>
-                                </DataTemplate>
-                            </CollectionView.ItemTemplate>
-                        </CollectionView>
-                        <Entry Text="{Binding SelectedAccountType}" Placeholder="Print your own type" Keyboard="Text" StyleClass="EntryAccountEdit" MaxLength="16"/>
-                    </VerticalStackLayout>
-                    
-                </VerticalStackLayout>
-
-            </Frame>
-        </Border>
-
-
-
-        <!-- CollectionView for accounts SelectionChangedCommand ="{Binding AccountSelectedCommand}" -->
-        <Border
-            Grid.Row="1"
-            StyleClass="Border25ShadowBlackWhite"
-            Margin="0, 20,0,10">
-            <Frame StyleClass="DataFrame"
-                   BorderColor="Transparent">
-                <VerticalStackLayout>
-                    <Label Text="Select the icon" FontSize="25"/>
+                    <Label Text="Identifier " StyleClass="TotalAccountDataName" FontFamily="Regular"/>
+                    <Label Text="(For example, a credit card number)" StyleClass="TotalAccountDataName" FontSize="12" FontFamily="Regular"/>
+                    <Entry Placeholder="Print Identifier" StyleClass="EntryAccountEdit" MaxLength="256"
+                               Text="{Binding NewAccountDisplay.Account.Identifier}"/>
+ 
+                    <Label Text="Type" StyleClass="TotalAccountDataName" FontFamily="Regular"/>
                     <CollectionView  
-                             Margin="0,10,0,0"
-                            ItemsSource="{Binding IconGlyphs}"
-                            SelectionMode="Single"
-                            SelectedItem="{Binding SelectedIcon}">
+                        Grid.Row="1" Margin="0,10,0,0"
+                        ItemsSource="{Binding AccountTypes  }"
+                        SelectionMode="Single"
+                        SelectedItem="{Binding SelectedAccountType}">
                         <CollectionView.ItemsLayout>
-                            <GridItemsLayout Orientation="Vertical" Span="4"/>
+                            <LinearItemsLayout Orientation="Horizontal"/>
                         </CollectionView.ItemsLayout>
                         <CollectionView.ItemTemplate>
                             <DataTemplate>
@@ -138,23 +54,97 @@
                                     </VisualStateManager.VisualStateGroups>
                                     <!-- BInd stroke -->
                                     <Border 
-                                            Stroke="White" 
-                                            Margin="0,0,0,0"
-                                            StrokeThickness="3"
+                                        Stroke="White" 
+                                        Margin="0,0,0,0"
+                                        StrokeThickness="3"
                                             
-                                            StyleClass="Border25ShadowPrimary">
+                                        StyleClass="Border25ShadowPrimary">
+                                        <Frame Padding="10"
+                                                CornerRadius="25"
+                                                BackgroundColor="#76A5AF"
+                                                HorizontalOptions="CenterAndExpand">
+                                            <!-- Main Grid -->
+                                            <Label Text="{Binding .}" 
+                                                    StyleClass="AccountIdentifingData"
+                                                    VerticalOptions="Center" 
+                                                    HorizontalOptions="Center"
+                                                    HorizontalTextAlignment="Center"
+                                                    FontSize="15"
+                                                    Margin="5,0,5,0"/>
+                                        </Frame>
+                                    </Border>
+                                </SwipeView>
+                            </DataTemplate>
+                        </CollectionView.ItemTemplate>
+                    </CollectionView>
+                    <Entry Text="{Binding SelectedAccountType}" Placeholder="Print your own type" Keyboard="Text" StyleClass="EntryAccountEdit" MaxLength="16"/>
+                    
+                    
+                </VerticalStackLayout>
+
+            </Frame>
+        </Border>
+
+
+
+        <!-- CollectionView for accounts SelectionChangedCommand ="{Binding AccountSelectedCommand}" -->
+        <Border
+            Grid.Row="1"
+            StyleClass="Border25ShadowBlackWhite"
+            Margin="0, 20,0,5">
+            <Frame StyleClass="DataFrame"
+                   BorderColor="Transparent">
+                <Grid RowDefinitions=".15*,.85*">
+                    <Label Grid.Row="0" Text="Select the icon" FontSize="25" StyleClass="TotalAccountDataName" HorizontalTextAlignment="Center" Margin="0,-6,0,0"/>
+                    <CollectionView  
+                            Grid.Row="1"
+                            ItemsSource="{Binding IconGlyphs}"
+                            SelectionMode="Single"
+                            SelectedItem="{Binding SelectedIcon}">
+                        <CollectionView.ItemsLayout>
+                            <GridItemsLayout Orientation="Vertical" Span="4" VerticalItemSpacing="5" HorizontalItemSpacing="5"/>
+                        </CollectionView.ItemsLayout>
+                        <CollectionView.ItemTemplate>
+                            <DataTemplate>
+                                <SwipeView>
+                                    <VisualStateManager.VisualStateGroups>
+                                        <VisualStateGroup Name="CommonStates">
+                                            <VisualState Name="Normal">
+                                                <VisualState.Setters>
+                                                    <Setter Property="BackgroundColor" Value="Transparent"></Setter>
+                                                </VisualState.Setters>
+                                            </VisualState>
+                                            <VisualState Name="Selected">
+                                                <VisualState.Setters>
+                                                    <Setter Property="BackgroundColor" Value="Transparent"></Setter>
+
+                                                </VisualState.Setters>
+                                            </VisualState>
+
+                                        </VisualStateGroup>
+                                    </VisualStateManager.VisualStateGroups>
+                                    <!-- BInd stroke -->
+                                    <Border 
+                                            Stroke="{Binding StrokeColor}" 
+                                            StrokeThickness="4"
+                                            Shadow="{StaticResource whiteToBlackShadowBig}"
+                                            
+                                            StyleClass="Border25ShadowPrimarySmall">
                                         <Frame 
-                                                   CornerRadius="25"
-                                                   BackgroundColor="Black"
-                                                   HorizontalOptions="CenterAndExpand">
+                                         
+                                            CornerRadius="25"
+                                            BackgroundColor="#59964E"
+                                            HorizontalOptions="Fill">
                                             <!-- Main Grid -->
                                             <Image
-                                                StyleClass="AccountImageStyle">
+                                                StyleClass="AccountImageStyle"
+                                                Aspect="Fill">
                                                 <Image.Source>
                                                     <FontImageSource
                                                     FontFamily="PaymentFont"
-                                                    Glyph="{Binding .}"/>
+                                                    Glyph="{Binding Glyph}"/>
                                                 </Image.Source>
+
                                             </Image>
 
                                         </Frame>
@@ -163,7 +153,7 @@
                             </DataTemplate>
                         </CollectionView.ItemTemplate>
                     </CollectionView>
-                </VerticalStackLayout>
+                </Grid>
             </Frame>
         </Border>
 
@@ -172,7 +162,7 @@
             StyleClass="AccountEditingButtons">
             <Button  Text="Add" 
                      StyleClass="AccountEditingButton"
-                     Command="{Binding OpenAddNewAccountPageCommand}"
+                     Command="{Binding AddNewAccountCommand}"
                      WidthRequest="150"/>
             <Button  Text="Cancel" 
                      StyleClass="AccountEditingButton"

@@ -15,6 +15,7 @@ public partial class App : Application
     public static BaseRepository<CachedAccountsData> CachedAccountsDataRepo { get; private set; }
     public static CachedAccountsDataService CachedAccountsDataService { get; private set; }
     public static RecurringTransactionsService RecurringTransactionsService { get; private set; }
+    public static ColorService ColorService { get; private set; }
 
     public App(BaseRepository<Account> accountsRepo,
                BaseRepository<AccountView> accountViewsRepo,
@@ -23,12 +24,13 @@ public partial class App : Application
                BaseRepository<RecurringTransaction> recurringTransactionsRepo,
                BaseRepository<CachedAccountsData> cachedAccountsDataRepo,
                CachedAccountsDataService cachedAccountsDataService,
-               RecurringTransactionsService recurringTransactionsService
+               RecurringTransactionsService recurringTransactionsService,
+               ColorService colorService
                )
 	{
 		InitializeComponent();
 
-		MainPage = new AddAccountView();
+		MainPage = new AppShell();
         AccountsRepo = accountsRepo;
         AccountViewsRepo = accountViewsRepo;
         CategoriesRepo = categoriesRepo;
@@ -37,5 +39,6 @@ public partial class App : Application
         CachedAccountsDataRepo = cachedAccountsDataRepo;
         CachedAccountsDataService = cachedAccountsDataService;
         RecurringTransactionsService = recurringTransactionsService;
+        ColorService = colorService;
     }
 }

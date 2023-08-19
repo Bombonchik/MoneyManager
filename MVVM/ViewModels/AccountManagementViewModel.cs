@@ -14,11 +14,13 @@ using System.Windows.Input;
 namespace MoneyManager.MVVM.ViewModels
 {
     [AddINotifyPropertyChangedInterface]
-    public class AddAccountViewModel
+    public class AccountManagementViewModel
     {
         private GlyphView selectedIcon;
-
+        public bool IsEditMode { get; private set; }
         public AccountDisplay NewAccountDisplay { get; set; }
+        public string ViewHeader { get; set; }
+        public string OperationName { get; set; }
         public List<string> AccountTypes { get; set; } = new List<string>
         {
             "Card",
@@ -51,9 +53,9 @@ namespace MoneyManager.MVVM.ViewModels
                 }
             }
         }
-        public Action<AccountDisplay> AccountAddedCallback { get; set; }
+        public Action<AccountDisplay> AccountSavedCallback { get; set; }
         public Action OperationCanceledCallback { get; set; }
-        public ICommand AddNewAccountCommand =>
+        public ICommand SaveAccountCommand =>
             new Command(async () =>
             {
                 if (string.IsNullOrEmpty(NewAccountDisplay.Account.Name) ||
@@ -61,15 +63,18 @@ namespace MoneyManager.MVVM.ViewModels
                 string.IsNullOrEmpty(SelectedAccountType) ||
                 SelectedIcon is null) 
                 {
-                    await Application.Current.MainPage.DisplayAlert("Unable to create an account", 
+                    await Application.Current.MainPage.DisplayAlert($"Unable to {(IsEditMode ? "save" : "create")} an account", 
                         "Fill in the account name, its nonnegative balance, select the account type and icon", "OK");
                     return;
                 }
                 NewAccountDisplay.Account.Type = SelectedAccountType;
                 NewAccountDisplay.AccountView.Icon = selectedIcon.Glyph;
-                NewAccountDisplay.Account.AccoutViewId = await App.AccountViewsRepo.GetCountAsync() + 1;
-                NewAccountDisplay.AccountView.AccountId = await App.AccountsRepo.GetCountAsync() + 1;
-                NewAccountDisplay.AccountView.BackgroundColor = App.ColorService.GetColorFromGradient(DisplayConstants.AccountBackgroundColorRange).ToHex();
+                if (!IsEditMode)
+                {
+                    NewAccountDisplay.Account.AccoutViewId = await App.AccountViewsRepo.GetCountAsync() + 1;
+                    NewAccountDisplay.AccountView.AccountId = await App.AccountsRepo.GetCountAsync() + 1;
+                    NewAccountDisplay.AccountView.BackgroundColor = App.ColorService.GetColorFromGradient(DisplayConstants.AccountBackgroundColorRange).ToHex();
+                }
                 await App.AccountsRepo.SaveItemAsync(NewAccountDisplay.Account);
                 await App.AccountViewsRepo.SaveItemAsync(NewAccountDisplay.AccountView);
                 ClosePage(NewAccountDisplay);
@@ -81,14 +86,14 @@ namespace MoneyManager.MVVM.ViewModels
         private void ClosePage(AccountDisplay newAccountDisplay = null)
         {
             if (newAccountDisplay is not null)
-                AccountAddedCallback?.Invoke(newAccountDisplay);
+                AccountSavedCallback?.Invoke(newAccountDisplay);
             else
                 OperationCanceledCallback?.Invoke();
             Shell.Current.Navigation.PopAsync();
         }
 
 
-        public AddAccountViewModel()
+        public AccountManagementViewModel(AccountDisplay existingAccount = null)
         {
             var iconGlyphs = DisplayConstants.IconGlyphs;
             IconGlyphs = new();
@@ -96,32 +101,35 @@ namespace MoneyManager.MVVM.ViewModels
             {
                 IconGlyphs.Add(new GlyphView { Glyph = iconGlyph, IsSelected = false });
             }
-            NewAccountDisplay = new AccountDisplay { Account = new Account(), AccountView = new AccountView()};
+            if (existingAccount is not null)
+                InitializeEditMode(existingAccount);
+            else
+                InitializeNormalMode();
+        }
+        private void InitializeEditMode(AccountDisplay existingAccount)
+        {
+            IsEditMode = true;
+            NewAccountDisplay = existingAccount;
+            var matchingGlyph = IconGlyphs.FirstOrDefault(glyph => glyph.Glyph == NewAccountDisplay.AccountView.Icon);
+            if (matchingGlyph is not null)
+                SelectedIcon = matchingGlyph;
+            SelectedAccountType = NewAccountDisplay.Account.Type;
+            ViewHeader = "Edit your account details";
+            OperationName = "Save";
+            
+        }
+        private void InitializeNormalMode()
+        {
+            IsEditMode = false;
+            NewAccountDisplay = new AccountDisplay { Account = new Account(), AccountView = new AccountView() };
+            ViewHeader = "Fill in your account details";
+            OperationName = "Add";
         }
         private void OnNewAccountSelected(GlyphView previousSelectedIcon, GlyphView currentSelectedIcon)
         {
             if (previousSelectedIcon is not null)
                 previousSelectedIcon.IsSelected = false;
             currentSelectedIcon.IsSelected = true;
-        }
-    }
-    [AddINotifyPropertyChangedInterface]
-    public class GlyphView
-    {
-        public string Glyph {get; set;}
-        public bool IsSelected { get; set; }
-        public Color StrokeColor
-        {
-            get
-            {
-                if (IsSelected)
-                {
-                    return Application.Current.PlatformAppTheme == AppTheme.Light ?
-                        Color.FromArgb("#852BD4") :
-                        Colors.White;
-                }
-                return Colors.Transparent;
-            }
         }
     }
     

@@ -14,7 +14,7 @@ namespace MoneyManager.MVVM.Models
     public class Account : TableData
     {
         private string identifier = "";
-
+   
         [NotNull]
         public string Name { get; set; }
         [NotNull]
@@ -24,7 +24,7 @@ namespace MoneyManager.MVVM.Models
             get 
             {
                 //if (identifier is null) return null;
-                if (Id == 0) return identifier;     // AddINotifyPropertyChangedInterface calls getter when I set value using binding so this fixes short return
+               // if (Id == 0) return identifier;     // AddINotifyPropertyChangedInterface calls getter when I set value using binding so this fixes short return
                 if (identifier.Length <= 10)
                     return identifier;
                 else
@@ -33,7 +33,7 @@ namespace MoneyManager.MVVM.Models
             set => identifier = value; 
         }
         [Ignore]
-        public string FullIdentifier => identifier;
+        public string FullIdentifier { get => identifier; set => identifier = value; }
 
         [NotNull]
         public string Type { get; set; }

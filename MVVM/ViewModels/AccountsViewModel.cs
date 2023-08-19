@@ -83,19 +83,33 @@ namespace MoneyManager.MVVM.ViewModels
         public ICommand OpenAddNewAccountPageCommand =>
             new Command(async () =>
             {
-                var addAccountPage = new AddAccountView();
-                var viewModel = ((AddAccountViewModel)addAccountPage.BindingContext);
-                viewModel.AccountAddedCallback = async (newAccountDisplay) =>
+                var accountManagmentPage = new AccountManagementView();
+                var viewModel = ((AccountManagementViewModel)accountManagmentPage.BindingContext);
+                viewModel.AccountSavedCallback = async (newAccountDisplay) =>
                 {
                     AccountDisplays.Add(newAccountDisplay);
+                    SelectedAccountDisplay = newAccountDisplay;
                     await ChangeTotalBalance(newAccountDisplay.Account.Balance);
                 };
-                //var stopwatch = new Stopwatch();
-                //stopwatch.Start();
-                await Shell.Current.Navigation.PushAsync(addAccountPage);
-                //stopwatch.Stop();
-                //TimeSpan timeTaken = stopwatch.Elapsed;
-                //Debug.WriteLine($"Time taken for Shell.Current.Navigation.PushAsync(addAccountPage);: {timeTaken.TotalMilliseconds} ms");
+                await Shell.Current.Navigation.PushAsync(accountManagmentPage);
+            }); 
+        public ICommand OpenEditAccountPageCommand =>
+            new Command(async () =>
+            {
+                if (SelectedAccountDisplay is null)
+                {
+                    await Application.Current.MainPage.DisplayAlert("You should select the account you want to edit","", "OK");
+                    return;
+                }
+                var currentSelectedAccountBalance = SelectedAccountDisplay.Account.Balance;
+                var accountManagmentPage = new AccountManagementView(SelectedAccountDisplay);
+                var viewModel = ((AccountManagementViewModel)accountManagmentPage.BindingContext);
+                viewModel.AccountSavedCallback = async (newAccountDisplay) =>
+                {
+                    await ChangeTotalBalance(newAccountDisplay.Account.Balance - currentSelectedAccountBalance);
+                    selectedAccountDisplay = new AccountDisplay { Account = newAccountDisplay.Account, AccountView = newAccountDisplay.AccountView };
+                };
+                await Shell.Current.Navigation.PushAsync(accountManagmentPage);
             });
         private void OnNewAccountSelected(AccountDisplay previousSelectedAccount, AccountDisplay currentSelectedAccount)
         {

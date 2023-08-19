@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             x:Class="MoneyManager.MVVM.Views.AddAccountView"
+             x:Class="MoneyManager.MVVM.Views.AccountManagementView"
              Shell.NavBarIsVisible="False">
     <Grid Padding="20" Margin="0, -8, 0, 0" RowDefinitions=".55*, .35*, .05*">
 
@@ -9,7 +9,7 @@
         <Border
             StyleClass="DataBorder25ShadowBlackWhite">
             <VerticalStackLayout>
-                <Label Text="Fill in your account details" StyleClass="TotalAccountDataName" FontSize="25"/>
+                <Label Text="{Binding ViewHeader}" StyleClass="TotalAccountDataName" FontSize="25"/>
                 <Label Text="Name" StyleClass="TotalAccountDataName" FontFamily="Regular" />
                 <Entry Placeholder="Print Account Name" Keyboard="Text" StyleClass="EntryAccountEdit" MaxLength="17"
                                 Text="{Binding NewAccountDisplay.Account.Name}"/>
@@ -20,14 +20,15 @@
                 <Label Text="Identifier " StyleClass="TotalAccountDataName" FontFamily="Regular"/>
                 <Label Text="(For example, a credit card number)" StyleClass="TotalAccountDataName" FontSize="12" FontFamily="Regular"/>
                 <Entry Placeholder="Print Identifier" StyleClass="EntryAccountEdit" MaxLength="256"
-                               Text="{Binding NewAccountDisplay.Account.Identifier}"/>
+                               Text="{Binding NewAccountDisplay.Account.FullIdentifier}"/>
 
                 <Label Text="Type" StyleClass="TotalAccountDataName" FontFamily="Regular"/>
                 <CollectionView  
                         Grid.Row="1" Margin="0,10,0,0"
-                        ItemsSource="{Binding AccountTypes  }"
+                        ItemsSource="{Binding AccountTypes}"
                         SelectionMode="Single"
-                        SelectedItem="{Binding SelectedAccountType}">
+                        SelectedItem="{Binding SelectedAccountType}"
+                        ItemsUpdatingScrollMode="KeepItemsInView">
                     <CollectionView.ItemsLayout>
                         <LinearItemsLayout Orientation="Horizontal"/>
                     </CollectionView.ItemsLayout>
@@ -98,9 +99,9 @@
         <HorizontalStackLayout
             Grid.Row="2"
             StyleClass="AccountEditingButtons">
-            <Button  Text="Add" 
+            <Button  Text="{Binding OperationName}" 
                      StyleClass="AccountEditingButton"
-                     Command="{Binding AddNewAccountCommand}"
+                     Command="{Binding SaveAccountCommand}"
                      WidthRequest="150"/>
             <Button  Text="Cancel" 
                      StyleClass="AccountEditingButton"

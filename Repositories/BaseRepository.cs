@@ -1,30 +1,5 @@
 ﻿
-/* Unmerged change from project 'MoneyManager (net7.0-windows10.0.19041.0)'
-Before:
-using SQLite;
-using MoneyManager.Abstractions;
-After:
-using MoneyManager.Abstractions;
-using SQLite;
-*/
 
-/* Unmerged change from project 'MoneyManager (net7.0-ios)'
-Before:
-using SQLite;
-using MoneyManager.Abstractions;
-After:
-using MoneyManager.Abstractions;
-using SQLite;
-*/
-
-/* Unmerged change from project 'MoneyManager (net7.0-maccatalyst)'
-Before:
-using SQLite;
-using MoneyManager.Abstractions;
-After:
-using MoneyManager.Abstractions;
-using SQLite;
-*/
 using MoneyManager.Abstractions;
 using SQLite;
 using SQLiteNetExtensionsAsync.Extensions;
@@ -50,7 +25,6 @@ namespace MoneyManager.Repositories
         {
             try
             {
-                //connection.Delete(item);
                 await connection.DeleteAsync(item, true);
             }
             catch (Exception ex)

@@ -70,72 +70,65 @@
             
             <CollectionView.ItemTemplate>
                 <DataTemplate>
+                    <!-- BInd stroke -->
+                    <Border 
+                        Stroke="{Binding AccountView.StrokeColor}" 
+                        StrokeThickness="3"
+                        HeightRequest="165"
+                        WidthRequest="165"
+                        StyleClass="Border25ShadowPrimary"
+                        BackgroundColor="{Binding AccountView.BackgroundColor, Converter={StaticResource ColorConverter}}"
+                        Padding="10"
+                        HorizontalOptions="CenterAndExpand">
 
-                        
-                        
-                        <!-- BInd stroke -->
-                        <Border 
-                            Stroke="{Binding AccountView.StrokeColor}" 
-                            
-                            StrokeThickness="3"
-                            HeightRequest="165"
-                            WidthRequest="165"
-                            StyleClass="Border25ShadowPrimary"
-                            BackgroundColor="{Binding AccountView.BackgroundColor, Converter={StaticResource ColorConverter}}"
-                            Padding="10"
-                            HorizontalOptions="CenterAndExpand">
-                        
                         <Grid
-                                ColumnDefinitions=".45*,.55*"
-                                RowDefinitions=".3*, .2*,.25*,.25* ">
+                            ColumnDefinitions=".45*,.55*"
+                            RowDefinitions=".3*, .2*,.25*,.25* ">
 
-                                <!-- Icon and Percentage -->
-                                <Image
-                                    StyleClass="AccountImageStyle">
-                                    <Image.Source>
-                                        <FontImageSource
-                                            FontFamily="PaymentFont"
-                                            Glyph="{Binding AccountView.Icon}"/>
-                                    </Image.Source>
-                                </Image>
+                            <!-- Icon and Percentage -->
+                            <Image
+                                StyleClass="AccountImageStyle">
+                                <Image.Source>
+                                    <FontImageSource
+                                        FontFamily="PaymentFont"
+                                        Glyph="{Binding AccountView.Icon}"/>
+                                </Image.Source>
+                            </Image>
 
 
-                                <!-- Identifier and AccountType -->
-                                <Label 
-                                    Text="{Binding Account.Type}" 
-                                    StyleClass="WhiteTextLabel"
-                                    Grid.Column="1"   
-                                    HorizontalTextAlignment="End"
-                                    VerticalOptions="Center"
-                                    FontFamily="Strong"/>
+                            <!-- Identifier and AccountType -->
+                            <Label 
+                                Text="{Binding Account.Type}" 
+                                StyleClass="WhiteTextLabel"
+                                Grid.Column="1"   
+                                HorizontalTextAlignment="End"
+                                VerticalOptions="Center"
+                                FontFamily="Strong"/>
 
-                                <Label Text="{Binding Account.Identifier, Mode=OneWay}" 
-                                       StyleClass="AccountIdentifingData, WhiteTextLabel"
-                                       Grid.Column="1" 
-                                       Grid.Row="1" 
-                                       VerticalOptions="Start" 
-                                       FontSize="12"/>
-                                <!-- Account Name centered -->
-                                <Label Text="{Binding Account.Name}" 
-                                       StyleClass="AccountData"
-                                       Grid.Row="2" 
-                                       Grid.ColumnSpan="2" 
-                                       FontSize="17"
+                            <Label Text="{Binding Account.Identifier}" 
+                                    StyleClass="AccountIdentifingData, WhiteTextLabel"
+                                    Grid.Column="1" 
+                                    Grid.Row="1" 
+                                    VerticalOptions="Start" 
+                                    FontSize="12"/>
+                            <!-- Account Name centered -->
+                            <Label Text="{Binding Account.Name}" 
+                                    StyleClass="AccountData"
+                                    Grid.Row="2" 
+                                    Grid.ColumnSpan="2" 
+                                    FontSize="17"
                                        
-                                       />
+                                    />
 
-                                <!-- Balance (spanning both columns) -->
-                                <Label Text="{Binding Account.Balance, StringFormat='{0:C}'}" 
-                                       StyleClass="AccountData"
-                                       Grid.Row="3" 
-                                       Grid.ColumnSpan="3" 
-                                       FontSize="20" 
-                                       FontFamily="Strong" />
-                            </Grid>
-                        </Border>
-
-                        
-                    
+                            <!-- Balance (spanning both columns) -->
+                            <Label Text="{Binding Account.Balance, StringFormat='{0:C}'}" 
+                                    StyleClass="AccountData"
+                                    Grid.Row="3" 
+                                    Grid.ColumnSpan="3" 
+                                    FontSize="20" 
+                                    FontFamily="Strong" />
+                        </Grid>
+                    </Border>
                 </DataTemplate>
             </CollectionView.ItemTemplate>
         </CollectionView>
@@ -147,7 +140,8 @@
                      StyleClass="AccountEditingButton"
                      Command="{Binding OpenAddNewAccountPageCommand}"/>
             <Button  Text="Edit" 
-                     StyleClass="AccountEditingButton"/>
+                     StyleClass="AccountEditingButton"
+                     Command="{Binding OpenEditAccountPageCommand}"/>
             <Button  Text="Delete" 
                      StyleClass="AccountEditingButton"/>
         </HorizontalStackLayout>

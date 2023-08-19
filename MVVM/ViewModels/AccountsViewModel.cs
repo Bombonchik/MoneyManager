@@ -13,6 +13,7 @@ using System.ComponentModel;
 using System.Diagnostics;
 using System.Linq;
 using System.Runtime.CompilerServices;
+using System.Security.Principal;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Input;
@@ -83,28 +84,19 @@ namespace MoneyManager.MVVM.ViewModels
             new Command(async () =>
             {
                 var addAccountPage = new AddAccountView();
-                ((AddAccountViewModel)addAccountPage.BindingContext).OnPageClosedCallback = HandleAddAccountClosed;
-                var stopwatch = new Stopwatch();
-                stopwatch.Start();
-
+                var viewModel = ((AddAccountViewModel)addAccountPage.BindingContext);
+                viewModel.AccountAddedCallback = async (newAccountDisplay) =>
+                {
+                    AccountDisplays.Add(newAccountDisplay);
+                    await ChangeTotalBalance(newAccountDisplay.Account.Balance);
+                };
+                //var stopwatch = new Stopwatch();
+                //stopwatch.Start();
                 await Shell.Current.Navigation.PushAsync(addAccountPage);
-                stopwatch.Stop();
-                TimeSpan timeTaken = stopwatch.Elapsed;
-
-                Debug.WriteLine($"Time taken for Shell.Current.Navigation.PushAsync(addAccountPage);: {timeTaken.TotalMilliseconds} ms");
+                //stopwatch.Stop();
+                //TimeSpan timeTaken = stopwatch.Elapsed;
+                //Debug.WriteLine($"Time taken for Shell.Current.Navigation.PushAsync(addAccountPage);: {timeTaken.TotalMilliseconds} ms");
             });
-        private async void HandleAddAccountClosed()
-        {
-            var newAccount = await App.AccountsRepo.GetLastItemAsync();
-            if (newAccount is null)
-                return;
-            if (AccountDisplays.Count == 0 || AccountDisplays.Last().Account.Id != newAccount.Id)
-            {
-                var newAccountView = await App.AccountViewsRepo.GetLastItemAsync();
-                AccountDisplays.Add(new AccountDisplay { Account = newAccount, AccountView = newAccountView });
-                await ChangeTotalBalance(newAccount.Balance);
-            }
-        }
         private void OnNewAccountSelected(AccountDisplay previousSelectedAccount, AccountDisplay currentSelectedAccount)
         {
             if (previousSelectedAccount is not null)

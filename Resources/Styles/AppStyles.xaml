@@ -127,12 +127,20 @@
         <Setter Property="StrokeThickness" Value="0"/>
         <Setter Property="BackgroundColor" Value="Transparent"/>
     </Style>
+    <Style Class="Border25AccountTypes" TargetType="Border">
+
+        <Setter Property="StrokeShape" Value="{StaticResource Rec25}" />
+        <Setter Property="Shadow" Value="{StaticResource CoolShadowBig}"/>
+        <Setter Property="StrokeThickness" Value="2"/>
+        <Setter Property="BackgroundColor" Value="#76A5AF"/>
+        <Setter Property="Stroke" Value="White"/>
+        <Setter Property="Padding" Value="10"/>
+    </Style>
     <Style Class="Border25ShadowPrimarySmall" TargetType="Border">
 
         <Setter Property="StrokeShape" Value="{StaticResource Rec25}" />
         <Setter Property="Shadow" Value="{StaticResource CoolShadow}"/>
-        <Setter Property="StrokeThickness" Value="0"/>
-        <Setter Property="BackgroundColor" Value="Transparent"/>
+       
     </Style>
     <Style Class="Border25ShadowBlackWhite" TargetType="Border">
 
@@ -140,6 +148,14 @@
         <Setter Property="Shadow" Value="{StaticResource CoolShadowBlackWhiteBig}"/>
         <Setter Property="StrokeThickness" Value="0"/>
         <Setter Property="BackgroundColor" Value="Transparent"/>
+    </Style>
+    <Style Class="DataBorder25ShadowBlackWhite" TargetType="Border">
+
+        <Setter Property="StrokeShape" Value="{StaticResource Rec25}" />
+        <Setter Property="Shadow" Value="{StaticResource CoolShadowBlackWhiteBig}"/>
+        <Setter Property="StrokeThickness" Value="0"/>
+        <Setter Property="Padding" Value="14" />
+        <Setter Property="BackgroundColor"  Value="{StaticResource Primary}"/>
     </Style>
 
     <Style Class="AccountData" TargetType="Label">
@@ -152,12 +168,14 @@
         <Setter Property="FontFamily" Value="Regular" />
     </Style>
     <Style Class="AccountIdentifingData" TargetType="Label">
+        <Setter Property="HorizontalOptions" Value="End" />
+    </Style>
+    <Style Class="WhiteTextLabel" TargetType="Label">
 
         <Setter Property="TextColor" Value="White" />
         <Setter Property="Shadow" Value="{StaticResource whiteToBlackShadowSmall}" />
-        <Setter Property="HorizontalOptions" Value="End" />
         <Setter Property="FontFamily" Value="Regular" />
-        
+
     </Style>
     <Style Class="AccountEditingButton" TargetType="Button">
         <Setter Property="WidthRequest" Value="104"/>

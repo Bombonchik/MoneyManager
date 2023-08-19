@@ -51,7 +51,8 @@ namespace MoneyManager.MVVM.ViewModels
                 }
             }
         }
-        public Action OnPageClosedCallback { get; set; }
+        public Action<AccountDisplay> AccountAddedCallback { get; set; }
+        public Action OperationCanceledCallback { get; set; }
         public ICommand AddNewAccountCommand =>
             new Command(async () =>
             {
@@ -71,13 +72,21 @@ namespace MoneyManager.MVVM.ViewModels
                 NewAccountDisplay.AccountView.BackgroundColor = App.ColorService.GetColorFromGradient(DisplayConstants.AccountBackgroundColorRange).ToHex();
                 await App.AccountsRepo.SaveItemAsync(NewAccountDisplay.Account);
                 await App.AccountViewsRepo.SaveItemAsync(NewAccountDisplay.AccountView);
+                ClosePage(NewAccountDisplay);
+            });
+        public ICommand CancelCommand =>
+            new Command( () => {
                 ClosePage();
             });
-        private void ClosePage()
+        private void ClosePage(AccountDisplay newAccountDisplay = null)
         {
-            OnPageClosedCallback?.Invoke();
+            if (newAccountDisplay is not null)
+                AccountAddedCallback?.Invoke(newAccountDisplay);
+            else
+                OperationCanceledCallback?.Invoke();
             Shell.Current.Navigation.PopAsync();
         }
+
 
         public AddAccountViewModel()
         {
@@ -87,7 +96,6 @@ namespace MoneyManager.MVVM.ViewModels
             {
                 IconGlyphs.Add(new GlyphView { Glyph = iconGlyph, IsSelected = false });
             }
-            selectedIcon = IconGlyphs.FirstOrDefault();
             NewAccountDisplay = new AccountDisplay { Account = new Account(), AccountView = new AccountView()};
         }
         private void OnNewAccountSelected(GlyphView previousSelectedIcon, GlyphView currentSelectedIcon)

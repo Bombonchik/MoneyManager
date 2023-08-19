@@ -65,80 +65,58 @@
                         ItemsUpdatingScrollMode="KeepLastItemInView">
             <CollectionView.ItemsLayout>
                 <GridItemsLayout Orientation="Vertical"
-                         Span="2"/>
+                         Span="2" VerticalItemSpacing="10"/>
             </CollectionView.ItemsLayout>
+            
             <CollectionView.ItemTemplate>
                 <DataTemplate>
 
-                    <SwipeView>
-                        <VisualStateManager.VisualStateGroups>
-                            <VisualStateGroup Name="CommonStates">
-                                <VisualState Name="Normal">
-                                    <VisualState.Setters>
-                                        <Setter Property="BackgroundColor" Value="Transparent"></Setter>
-                                    </VisualState.Setters>
-                                </VisualState>
-                                <VisualState Name="Selected">
-                                    <VisualState.Setters>
-                                        <Setter Property="BackgroundColor" Value="Transparent"></Setter>
-                                        
-                                    </VisualState.Setters>
-                                </VisualState>
-
-                            </VisualStateGroup>
-                        </VisualStateManager.VisualStateGroups>
+                        
+                        
                         <!-- BInd stroke -->
                         <Border 
                             Stroke="{Binding AccountView.StrokeColor}" 
-                            Margin="0,0,0,-5"
-                            StrokeThickness="10"
-                            HeightRequest="185"
-                            WidthRequest="185"
-                            StyleClass="Border25ShadowPrimary">
                             
-                           
-                            <Frame Padding="10"
-                               
-                               CornerRadius="25"
-                               
-                               HasShadow="False"
-                               HeightRequest="165"
-                               WidthRequest="165"
-                               BackgroundColor="{Binding AccountView.BackgroundColor, Converter={StaticResource ColorConverter}}"
-                               HorizontalOptions="CenterAndExpand">
-                                <!-- Main Grid -->
-                                <Grid
+                            StrokeThickness="3"
+                            HeightRequest="165"
+                            WidthRequest="165"
+                            StyleClass="Border25ShadowPrimary"
+                            BackgroundColor="{Binding AccountView.BackgroundColor, Converter={StaticResource ColorConverter}}"
+                            Padding="10"
+                            HorizontalOptions="CenterAndExpand">
+                        
+                        <Grid
                                 ColumnDefinitions=".45*,.55*"
                                 RowDefinitions=".3*, .2*,.25*,.25* ">
 
-                                    <!-- Icon and Percentage -->
-                                    <Image
+                                <!-- Icon and Percentage -->
+                                <Image
                                     StyleClass="AccountImageStyle">
-                                        <Image.Source>
-                                            <FontImageSource
+                                    <Image.Source>
+                                        <FontImageSource
                                             FontFamily="PaymentFont"
                                             Glyph="{Binding AccountView.Icon}"/>
-                                        </Image.Source>
-                                    </Image>
+                                    </Image.Source>
+                                </Image>
 
 
-                                    <!-- Identifier and AccountType -->
-                                    <Label 
+                                <!-- Identifier and AccountType -->
+                                <Label 
                                     Text="{Binding Account.Type}" 
-                                    StyleClass="AccountIdentifingData"
+                                    StyleClass="WhiteTextLabel"
                                     Grid.Column="1"   
                                     HorizontalTextAlignment="End"
                                     VerticalOptions="Center"
                                     FontFamily="Strong"/>
-                                    
-                                    <Label Text="{Binding Account.Identifier, Mode=OneWayToSource}" 
-                                       StyleClass="AccountIdentifingData"
+
+                                <Label Text="{Binding Account.Identifier, Mode=OneWay}" 
+                                       StyleClass="AccountIdentifingData, WhiteTextLabel"
                                        Grid.Column="1" 
                                        Grid.Row="1" 
                                        VerticalOptions="Start" 
                                        FontSize="12"/>
-                                    <!-- Account Name centered -->
-                                    <Label Text="{Binding Account.Name}" 
+                                <!-- Account Name centered -->
+                                <Label Text="{Binding Account.Name}" 
                                        StyleClass="AccountData"
                                        Grid.Row="2" 
                                        Grid.ColumnSpan="2" 
@@ -146,19 +124,18 @@
                                        
                                        />
 
-                                    <!-- Balance (spanning both columns) -->
-                                    <Label Text="{Binding Account.Balance, StringFormat='{0:C}'}" 
+                                <!-- Balance (spanning both columns) -->
+                                <Label Text="{Binding Account.Balance, StringFormat='{0:C}'}" 
                                        StyleClass="AccountData"
                                        Grid.Row="3" 
                                        Grid.ColumnSpan="3" 
                                        FontSize="20" 
                                        FontFamily="Strong" />
-                                </Grid>
-                            </Frame>
+                            </Grid>
                         </Border>
 
                         
-                    </SwipeView>
+                    
                 </DataTemplate>
             </CollectionView.ItemTemplate>
         </CollectionView>

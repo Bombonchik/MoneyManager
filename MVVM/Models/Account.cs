@@ -13,7 +13,7 @@ namespace MoneyManager.MVVM.Models
     [AddINotifyPropertyChangedInterface]
     public class Account : TableData
     {
-        private string identifier;
+        private string identifier = "";
 
         [NotNull]
         public string Name { get; set; }
@@ -23,7 +23,7 @@ namespace MoneyManager.MVVM.Models
         { 
             get 
             {
-                if (identifier is null) return null;
+                //if (identifier is null) return null;
                 if (Id == 0) return identifier;     // AddINotifyPropertyChangedInterface calls getter when I set value using binding so this fixes short return
                 if (identifier.Length <= 10)
                     return identifier;

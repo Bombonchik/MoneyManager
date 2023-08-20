@@ -107,7 +107,7 @@ namespace MoneyManager.MVVM.ViewModels
                 viewModel.AccountSavedCallback = async (newAccountDisplay) =>
                 {
                     await ChangeTotalBalance(newAccountDisplay.Account.Balance - currentSelectedAccountBalance);
-                    selectedAccountDisplay = new AccountDisplay { Account = newAccountDisplay.Account, AccountView = newAccountDisplay.AccountView };
+                    SelectedAccountDisplay = new AccountDisplay { Account = newAccountDisplay.Account, AccountView = newAccountDisplay.AccountView };
                 };
                 await Shell.Current.Navigation.PushAsync(accountManagmentPage);
             });

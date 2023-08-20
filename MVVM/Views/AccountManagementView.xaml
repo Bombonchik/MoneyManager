@@ -20,7 +20,7 @@
                 <Label Text="Identifier " StyleClass="TotalAccountDataName" FontFamily="Regular"/>
                 <Label Text="(For example, a credit card number)" StyleClass="TotalAccountDataName" FontSize="12" FontFamily="Regular"/>
                 <Entry Placeholder="Print Identifier" StyleClass="EntryAccountEdit" MaxLength="256"
-                               Text="{Binding NewAccountDisplay.Account.FullIdentifier}"/>
+                               Text="{Binding NewAccountDisplay.Account.Identifier}"/>
 
                 <Label Text="Type" StyleClass="TotalAccountDataName" FontFamily="Regular"/>
                 <CollectionView  

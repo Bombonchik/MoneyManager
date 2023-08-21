@@ -16,5 +16,10 @@ namespace MoneyManager.MVVM.Models
         public decimal MonthExpenses { get; set; }
         public decimal MonthIncome { get; set; }
         public decimal MonthAverageExpense { get; set; }
+        public override string ToString()
+        {
+            return $"CachedAccountsData: Id: {Id}, MonthYear: {MonthYear}, TotalBalance: {TotalBalance}, MonthExpenses: {MonthExpenses}, " +
+                $"MonthIncome: {MonthIncome}, MonthAverageExpense: {MonthAverageExpense}";
+        }
     }
 }

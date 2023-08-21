@@ -13,7 +13,7 @@
 
     </ContentPage.Resources>
 
-    <Grid Padding="20" Margin="0, -8, 0, 0">
+    <Grid Padding="20" Margin="0, -8, 0, 0" HorizontalOptions="Center">
         <!-- Row Definitions -->
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
@@ -27,10 +27,11 @@
             <Frame StyleClass="DataFrame"
                    BorderColor="Transparent">
                 <Grid Grid.Row="0" 
-                  ColumnDefinitions=".53*,.47*"
-                  RowDefinitions="*, *"
-                  Margin="0,0,-6,0"
-                  BindingContext="{Binding CachedAccountsData}">
+                    ColumnDefinitions=".53*,.47*"
+                    RowDefinitions="*, *"
+                    Margin="0,0,-6,0"
+                    WidthRequest="330"
+                    BindingContext="{Binding CachedAccountsData}">
 
                     <VerticalStackLayout>
                         <Label Text="Total Balance" StyleClass="TotalAccountDataName"/>
@@ -47,8 +48,8 @@
                         <Label Text="{Binding MonthExpenses, StringFormat='{0:C}'}" StyleClass="TotalAccountDataAmount"/>
                     </VerticalStackLayout>
 
-                    <VerticalStackLayout  Grid.Column="1" Grid.Row="1">
-                        <Label Text="Average Expense" StyleClass="TotalAccountDataName" />
+                    <VerticalStackLayout  Grid.Column="1" Grid.Row="1" Margin="0,0,0,0">
+                        <Label Text="Average Expense" StyleClass="TotalAccountDataName"/>
                         <Label Text="{Binding MonthAverageExpense, StringFormat='{0:C}'}" StyleClass="TotalAccountDataAmount"/>
                     </VerticalStackLayout>
                 </Grid>
@@ -107,18 +108,19 @@
                                 FontFamily="Strong"/>
 
                             <Label Text="{Binding Account.Identifier, Converter={StaticResource IdentifierConverter}}" 
-                                    StyleClass="AccountIdentifingData, WhiteTextLabel"
-                                    Grid.Column="1" 
-                                    Grid.Row="1" 
-                                    VerticalOptions="Start" 
-                                    FontSize="12"/>
+                                   StyleClass="AccountIdentifingData, WhiteTextLabel"
+                                   Grid.Column="1" 
+                                   Grid.Row="1" 
+                                   VerticalOptions="Start" 
+                                   FontSize="12"/>
                             <!-- Account Name centered -->
                             <Label Text="{Binding Account.Name}" 
-                                    StyleClass="AccountData"
-                                    Grid.Row="2" 
-                                    Grid.ColumnSpan="2" 
-                                    FontSize="17"
-                                       
+                                   StyleClass="AccountData"
+                                   Grid.Row="2" 
+                                   Grid.ColumnSpan="2" 
+                                   FontSize="17"
+                                   Margin="-5, 0, 0, 0"
+                                   FontFamily="Strong"
                                     />
 
                             <!-- Balance (spanning both columns) -->
@@ -144,9 +146,9 @@
                      StyleClass="AccountEditingButton"
                      Command="{Binding OpenEditAccountPageCommand}"/>
             <Button  Text="Delete" 
-                     StyleClass="AccountEditingButton"/>
+                     StyleClass="AccountEditingButton"
+                     Command="{Binding DeleteAccountCommand}"/>
         </HorizontalStackLayout>
 
-        <!-- Button to add new account -->
     </Grid>
 </ContentPage>

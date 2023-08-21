@@ -11,7 +11,7 @@
             <VerticalStackLayout>
                 <Label Text="{Binding ViewHeader}" StyleClass="TotalAccountDataName" FontSize="25"/>
                 <Label Text="Name" StyleClass="TotalAccountDataName" FontFamily="Regular" />
-                <Entry Placeholder="Print Account Name" Keyboard="Text" StyleClass="EntryAccountEdit" MaxLength="17"
+                <Entry Placeholder="Print Account Name" Keyboard="Text" StyleClass="EntryAccountEdit" MaxLength="16"
                                 Text="{Binding NewAccountDisplay.Account.Name}"/>
                 <Label Text="Balance" StyleClass="TotalAccountDataName" FontFamily="Regular"/>
                 <Entry Placeholder="Print Account Balance" Keyboard="Numeric" StyleClass="EntryAccountEdit" MaxLength="10"

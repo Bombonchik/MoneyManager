@@ -30,6 +30,7 @@ public static class MauiProgram
         builder.Services.AddSingleton<BaseRepository<Transaction>>();
         builder.Services.AddSingleton<BaseRepository<RecurringTransaction>>();
         builder.Services.AddSingleton<BaseRepository<CachedAccountsData>>();
+        builder.Services.AddSingleton<BaseRepository<DeletedAccount>>();
 
         builder.Services.AddSingleton<CachedAccountsDataService>();
         builder.Services.AddSingleton<RecurringTransactionsService>();

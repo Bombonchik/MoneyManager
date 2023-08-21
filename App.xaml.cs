@@ -13,6 +13,9 @@ public partial class App : Application
     public static BaseRepository<Transaction> TransactionsRepo { get; private set; }
     public static BaseRepository<RecurringTransaction> RecurringTransactionsRepo { get; private set; }
     public static BaseRepository<CachedAccountsData> CachedAccountsDataRepo { get; private set; }
+    public static BaseRepository<DeletedAccount> DeletedAccountRepo { get; private set; }
+
+
     public static CachedAccountsDataService CachedAccountsDataService { get; private set; }
     public static RecurringTransactionsService RecurringTransactionsService { get; private set; }
     public static ColorService ColorService { get; private set; }
@@ -23,6 +26,8 @@ public partial class App : Application
                BaseRepository<Transaction> transactionsRepo,
                BaseRepository<RecurringTransaction> recurringTransactionsRepo,
                BaseRepository<CachedAccountsData> cachedAccountsDataRepo,
+               BaseRepository<DeletedAccount> deletedAccountRepo,
+
                CachedAccountsDataService cachedAccountsDataService,
                RecurringTransactionsService recurringTransactionsService,
                ColorService colorService
@@ -37,6 +42,8 @@ public partial class App : Application
         TransactionsRepo = transactionsRepo;
         RecurringTransactionsRepo = recurringTransactionsRepo;
         CachedAccountsDataRepo = cachedAccountsDataRepo;
+        DeletedAccountRepo = deletedAccountRepo;
+
         CachedAccountsDataService = cachedAccountsDataService;
         RecurringTransactionsService = recurringTransactionsService;
         ColorService = colorService;

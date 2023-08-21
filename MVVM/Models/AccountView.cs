@@ -45,7 +45,7 @@ namespace MoneyManager.MVVM.Models
 
         public override string ToString()
         {
-            return $"AccountId: {AccountId}, Icon: {Icon}, BackgroundColor: {BackgroundColor}";
+            return $"AccountView: Id: {Id}, AccountId: {AccountId}, Icon: {Icon}, BackgroundColor: {BackgroundColor}";
         }
     }
 }

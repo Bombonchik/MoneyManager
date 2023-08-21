@@ -70,15 +70,34 @@ namespace MoneyManager.MVVM.ViewModels
                 NewAccountDisplay.Account.Type = SelectedAccountType;
                 NewAccountDisplay.AccountView.Icon = selectedIcon.Glyph;
                 if (!IsEditMode)
-                {
-                    NewAccountDisplay.Account.AccoutViewId = await App.AccountViewsRepo.GetCountAsync() + 1;
-                    NewAccountDisplay.AccountView.AccountId = await App.AccountsRepo.GetCountAsync() + 1;
-                    NewAccountDisplay.AccountView.BackgroundColor = App.ColorService.GetColorFromGradient(DisplayConstants.AccountBackgroundColorRange).ToHex();
-                }
+                    await ProcessSavingInNormalMode();
                 await App.AccountsRepo.SaveItemAsync(NewAccountDisplay.Account);
+                Debug.WriteLine($"Save: {NewAccountDisplay.Account}");
                 await App.AccountViewsRepo.SaveItemAsync(NewAccountDisplay.AccountView);
+                Debug.WriteLine($"Save: {NewAccountDisplay.AccountView}");
                 ClosePage(NewAccountDisplay);
             });
+        private async Task ProcessSavingInNormalMode()
+        {
+            var AccountWithHighestId = await App.AccountsRepo.GetHighestItemByPropertyAsync("Id");
+            var DeletedAccountWithHighestDeletedId = await App.DeletedAccountRepo.GetHighestItemByPropertyAsync("DeletedAccountId");
+            int nextAccountId = 0;
+            if (AccountWithHighestId is null || DeletedAccountWithHighestDeletedId is null)
+            {
+                if (AccountWithHighestId is null && DeletedAccountWithHighestDeletedId is null)
+                    nextAccountId = 1;
+                else if (AccountWithHighestId is null)
+                    nextAccountId = DeletedAccountWithHighestDeletedId.DeletedAccountId + 1;
+                else
+                    nextAccountId = AccountWithHighestId.Id + 1;
+            }
+            else
+                nextAccountId = Math.Max(DeletedAccountWithHighestDeletedId.DeletedAccountId, AccountWithHighestId.Id) + 1;
+            NewAccountDisplay.Account.AccountViewId = nextAccountId;
+            NewAccountDisplay.AccountView.AccountId = nextAccountId;
+            Debug.WriteLine($"nextAccountId: {nextAccountId}");
+            NewAccountDisplay.AccountView.BackgroundColor = App.ColorService.GetColorFromGradient(DisplayConstants.AccountBackgroundColorRange).ToHex();
+        }
         public ICommand CancelCommand =>
             new Command( () => {
                 ClosePage();

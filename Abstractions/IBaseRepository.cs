@@ -14,5 +14,6 @@ namespace MoneyManager.Abstractions
         Task<List<T>> GetItemsWithChildrenAsync();
         Task<int> GetCountAsync();
         Task DeleteItemAsync(T item);
+        Task<T> GetHighestItemByPropertyAsync(string propertyName);
     }
 }

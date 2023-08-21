@@ -39,7 +39,7 @@ namespace MoneyManager.Services
                 lastDate = lastDate.AddMonths(1); // Move to the next month
                 try
                 {
-                    cachedAccountsData = await App.RecurringTransactionsService.ExecuteRecurringTransactionsForMonth(lastDate);
+                    cachedAccountsData = await App.RecurringTransactionsService.ExecuteRecurringTransactionsForMonthAsync(lastDate);
                     if (cachedAccountsData is not null)
                         await App.CachedAccountsDataRepo.SaveItemAsync(cachedAccountsData);
                 }

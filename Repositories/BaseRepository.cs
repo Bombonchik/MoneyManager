@@ -3,6 +3,7 @@
 using MoneyManager.Abstractions;
 using SQLite;
 using SQLiteNetExtensionsAsync.Extensions;
+using SQLiteNetExtensions.Extensions;
 using System.Linq.Expressions;
 
 namespace MoneyManager.Repositories
@@ -145,6 +146,24 @@ namespace MoneyManager.Repositories
         public async Task<int> GetCountAsync()
         {
             return await connection.Table<T>().CountAsync();
+        }
+
+        public async Task<T> GetHighestItemByPropertyAsync(string propertyName)
+        {
+            try
+            {
+                var property = typeof(T).GetProperty(propertyName);
+                if (property is null)
+                    throw new ArgumentException($"'{propertyName}' is not a property of {typeof(T).Name}");
+                var query = $"SELECT * FROM {typeof(T).Name} ORDER BY {propertyName} DESC LIMIT 1";
+                var result =  await connection.QueryAsync<T>(query);
+                return result.FirstOrDefault();
+            }
+            catch (Exception ex)
+            {
+                StatusMessage = $"Error: {ex.Message}";
+            }
+            return null;
         }
     }
 }

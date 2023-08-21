@@ -16,7 +16,7 @@
         </Tab>
 
         <Tab Title="Add" Icon="add_circle_plus.svg">
-            <ShellContent ContentTemplate="{DataTemplate views:NewTransactionView}" />
+            <ShellContent ContentTemplate="{DataTemplate views:TransactionManagementView}" />
         </Tab>
 
         <Tab Title="Overview" Icon="bar_chart.svg">

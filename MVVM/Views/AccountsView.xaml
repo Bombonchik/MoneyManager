@@ -118,10 +118,8 @@
                                    StyleClass="AccountData"
                                    Grid.Row="2" 
                                    Grid.ColumnSpan="2" 
-                                   FontSize="17"
-                                   Margin="-5, 0, 0, 0"
-                                   FontFamily="Strong"
-                                    />
+                                   FontSize="16"
+                                   Margin="-10, 0, -10, 0" />
 
                             <!-- Balance (spanning both columns) -->
                             <Label Text="{Binding Account.Balance, StringFormat='{0:C}'}" 

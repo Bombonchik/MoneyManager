@@ -17,7 +17,7 @@ using Microsoft.Maui.ApplicationModel;
 namespace MoneyManager.MVVM.Models
 {
     [AddINotifyPropertyChangedInterface]
-    public class AccountView : TableData
+    public class AccountView : TableData, ISelectable
     {
 
         [ForeignKey(typeof(Account))]

@@ -34,22 +34,22 @@
                     BindingContext="{Binding CachedAccountsData}">
 
                     <VerticalStackLayout>
-                        <Label Text="Total Balance" StyleClass="TotalAccountDataName"/>
+                        <Label Text="Total Balance" StyleClass="DataName"/>
                         <Label Text="{Binding TotalBalance, StringFormat='{0:C}'}" StyleClass="TotalAccountDataAmount"/>
                     </VerticalStackLayout>
 
                     <VerticalStackLayout Grid.Column="1">
-                        <Label Text="Income" StyleClass="TotalAccountDataName"/>
+                        <Label Text="Income" StyleClass="DataName"/>
                         <Label Text="{Binding MonthIncome, StringFormat='{0:C}'}" StyleClass="TotalAccountDataAmount"/>
                     </VerticalStackLayout>
 
                     <VerticalStackLayout Grid.Row="1">
-                        <Label Text="Expenses" StyleClass="TotalAccountDataName"/>
+                        <Label Text="Expenses" StyleClass="DataName"/>
                         <Label Text="{Binding MonthExpenses, StringFormat='{0:C}'}" StyleClass="TotalAccountDataAmount"/>
                     </VerticalStackLayout>
 
                     <VerticalStackLayout  Grid.Column="1" Grid.Row="1" Margin="0,0,0,0">
-                        <Label Text="Average Expense" StyleClass="TotalAccountDataName"/>
+                        <Label Text="Average Expense" StyleClass="DataName"/>
                         <Label Text="{Binding MonthAverageExpense, StringFormat='{0:C}'}" StyleClass="TotalAccountDataAmount"/>
                     </VerticalStackLayout>
                 </Grid>

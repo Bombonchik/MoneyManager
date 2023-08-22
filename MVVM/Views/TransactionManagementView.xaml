@@ -2,8 +2,80 @@
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="MoneyManager.MVVM.Views.TransactionManagementView"
-             Title="TransactionManagementView">
-    <Grid>
-        <Button Text="Close Page" Command="{Binding ClosePageCommand}"/>
+             BackgroundColor="{AppThemeBinding Light={StaticResource LightPrimaryBackground}, Dark={StaticResource DarkPrimaryBackground}}"
+             xmlns:converters="clr-namespace:MoneyManager.Converters">
+
+    <ContentPage.Resources>
+        <converters:BooleanInverterConverter x:Key="BoolInverter"/>
+    </ContentPage.Resources>
+
+
+    <Grid RowDefinitions=".07*, .4*, .53* " Padding="14">
+        <CollectionView  
+            Grid.Row="0" Margin="0,0,0,0"
+            ItemsSource="{Binding TransactionTypes}"
+            SelectionMode="Single"
+            SelectedItem="{Binding SelectedTransactionType}"
+            HorizontalOptions="Center">
+            <CollectionView.ItemsLayout>
+                <LinearItemsLayout Orientation="Horizontal"/>
+            </CollectionView.ItemsLayout>
+            <CollectionView.ItemTemplate>
+                <DataTemplate>
+                    <Border            
+                        Stroke="{Binding StrokeColor}"
+                        StrokeThickness="4.5"
+                        StyleClass="ItemPicker">
+                        <Label Text="{Binding Type}" 
+                            StyleClass="Strong, CenterLabel"
+                            TextColor="{AppThemeBinding Light={StaticResource White}, Dark={StaticResource Primary}}"/>
+                    </Border>
+                </DataTemplate>
+            </CollectionView.ItemTemplate>
+        </CollectionView>
+        <Border
+            Grid.Row="1"
+            Margin="0,10,0,0"
+            StyleClass="DataBorder25ShadowBlackWhite">
+            <VerticalStackLayout>
+                <Grid StyleClass="TransactionProperty"  ColumnDefinitions=".28*, .28*, .18*, .26*">
+                    <Label Text="Date" StyleClass="DataName, TransactionPropertyName"/>
+                    <DatePicker Date="{Binding NewTransactionDisplay.Transaction.DateTime}" Grid.Column="1" Grid.ColumnSpan="2" VerticalOptions="Center"/>
+                    <TimePicker Time="{Binding SelectedTime}" Grid.Column="1" Grid.ColumnSpan="2"  HorizontalOptions="End"   VerticalOptions="Center"/>
+                    <Button Text="Repeat" Grid.Column="3" HeightRequest="32" VerticalOptions="Center" StyleClass="Small" Margin="12,0,2,0  " />
+                </Grid>
+                <Grid StyleClass="TransactionProperty" IsVisible="{Binding TransferIndicator, Converter={StaticResource BoolInverter}}">
+                    <Label Text="Account" StyleClass="DataName, TransactionPropertyName"/>
+                    <Entry Grid.Column="1" VerticalOptions="Center"/>
+                    <Button BackgroundColor="Transparent" Grid.Column="1"/>
+                </Grid>
+                <Grid StyleClass="TransactionProperty" IsVisible="{Binding TransferIndicator}">
+                    <Label Text="From" StyleClass="DataName, TransactionPropertyName"/>
+                    <Entry Grid.Column="1" VerticalOptions="Center"/>
+                    <Button BackgroundColor="Transparent" Grid.Column="1"/>
+                </Grid>
+                <Grid StyleClass="TransactionProperty" IsVisible="{Binding TransferIndicator, Converter={StaticResource BoolInverter}}">
+                    <Label Text="Category" StyleClass="DataName, TransactionPropertyName"/>
+                    <Entry Grid.Column="1" VerticalOptions="Center"/>
+                    <Button BackgroundColor="Transparent" Grid.Column="1"/>
+                </Grid>
+                <Grid StyleClass="TransactionProperty" IsVisible="{Binding TransferIndicator}">
+                    <Label Text="To" StyleClass="DataName, TransactionPropertyName"/>
+                    <Entry Grid.Column="1" VerticalOptions="Center"/>
+                    <Button BackgroundColor="Transparent" Grid.Column="1"/>
+                </Grid>
+                <Grid StyleClass="TransactionProperty">
+                    <Label Text="Amount" StyleClass="DataName, TransactionPropertyName"/>
+                    <Entry Text="{Binding NewTransactionDisplay.Transaction.Amount}" Grid.Column="1" Keyboard="Numeric" StyleClass="EntryEdit, TransactionPropertyEntry"/>
+                </Grid>
+                <Grid StyleClass="TransactionProperty">
+                    <Label Text="Note" StyleClass="DataName, TransactionPropertyName"/>
+                    <Entry Text="{Binding NewTransactionDisplay.Transaction.Note}" Grid.Column="1" Keyboard="Text" StyleClass="EntryEdit, TransactionPropertyEntry"/>
+                </Grid>
+
+            </VerticalStackLayout>
+        </Border>
+            
+        <Button Grid.Row="2" IsVisible="True" Text="Close Page" Command="{Binding ClosePageCommand}" HeightRequest="26"/>
     </Grid>
 </ContentPage>

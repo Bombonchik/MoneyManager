@@ -9,9 +9,8 @@ using System.Threading.Tasks;
 namespace MoneyManager.DataTemplates
 {
     [AddINotifyPropertyChangedInterface]
-    public class GlyphView : ISelectable
+    public class TransactionView : ISelectable
     {
-        public string Glyph { get; set; }
         public bool IsSelected { get; set; }
         public Color StrokeColor
         {
@@ -20,8 +19,9 @@ namespace MoneyManager.DataTemplates
                 if (IsSelected)
                 {
                     return Application.Current.PlatformAppTheme == AppTheme.Light ?
-                        Color.FromArgb("#852BD4") :
-                        Colors.White;
+                        Color.FromArgb("#10BFFF") :
+                        Color.FromArgb("#852BD4");
+
                 }
                 return Colors.Transparent;
             }

@@ -12,7 +12,7 @@ A Personal Finance Manager application can help alleviate these problems by prov
 
 **Alternatives and Their Limitations**
 
-There are several personal finance apps available on the market, such as Money Lover – Spending Manager, 1Money and YNAB (You Need A Budget. However, these apps often come with limitations. Some require access to the user's bank account to track expenses, which many users are uncomfortable with. Others offer a broad range of features, making the app complex and difficult to navigate. Some apps are subscription-based, which can be a barrier for users looking for a free solution.
+There are several personal finance apps available on the market, such as Money Lover – Spending Manager, 1Money and YNAB (You Need A Budget). However, these apps often come with limitations. Some require access to the user's bank account to track expenses, which many users are uncomfortable with. Others offer a broad range of features, making the app complex and difficult to navigate. Some apps are subscription-based, which can be a barrier for users looking for a free solution.
 
 Additionally, many existing apps lack the functionality to set up recurring income or expenses, such as salaries or rent payments. This means users have to manually enter these recurring transactions each time they occur, which can be timeconsuming and inconvenient.
 

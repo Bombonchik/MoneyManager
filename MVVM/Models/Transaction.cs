@@ -1,4 +1,5 @@
 ﻿using MoneyManager.Abstractions;
+using PropertyChanged;
 using SQLiteNetExtensions.Attributes;
 
 namespace MoneyManager.MVVM.Models
@@ -9,13 +10,13 @@ namespace MoneyManager.MVVM.Models
         Expense,
         Transfer
     }
-
+    [AddINotifyPropertyChangedInterface]
     public class Transaction : TableData
     {
         public TransactionType Type { get; set; }
         public decimal Amount { get; set; }
-        public DateTime Date { get; set; }
-        public string Description { get; set; }
+        public DateTime DateTime { get; set; }
+        public string Note { get; set; }
 
         // For Income and Expense, this will be the account involved.
         // For Transfer, this will be the source account.

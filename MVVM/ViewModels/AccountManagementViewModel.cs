@@ -1,4 +1,5 @@
-﻿using MoneyManager.Constants;
+﻿using MoneyManager.Abstractions;
+using MoneyManager.Constants;
 using MoneyManager.DataTemplates;
 using MoneyManager.MVVM.Models;
 using PropertyChanged;
@@ -14,7 +15,7 @@ using System.Windows.Input;
 namespace MoneyManager.MVVM.ViewModels
 {
     [AddINotifyPropertyChangedInterface]
-    public class AccountManagementViewModel
+    public class AccountManagementViewModel : BaseViewModel
     {
         private GlyphView selectedIcon;
         public bool IsEditMode { get; private set; }
@@ -47,7 +48,7 @@ namespace MoneyManager.MVVM.ViewModels
                 if (value == null) return;
                 if (selectedIcon != value)
                 {
-                    OnNewAccountSelected(selectedIcon, value);
+                    OnNewItemSelected(selectedIcon, value);
                     selectedIcon = value;
 
                 }
@@ -143,12 +144,6 @@ namespace MoneyManager.MVVM.ViewModels
             NewAccountDisplay = new AccountDisplay { Account = new Account(), AccountView = new AccountView() };
             ViewHeader = "Fill in your account details";
             OperationName = "Add";
-        }
-        private void OnNewAccountSelected(GlyphView previousSelectedIcon, GlyphView currentSelectedIcon)
-        {
-            if (previousSelectedIcon is not null)
-                previousSelectedIcon.IsSelected = false;
-            currentSelectedIcon.IsSelected = true;
         }
     }
     

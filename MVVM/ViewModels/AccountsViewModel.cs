@@ -1,5 +1,6 @@
 ﻿using Bogus;
 using Bogus.DataSets;
+using MoneyManager.Abstractions;
 using MoneyManager.Constants;
 using MoneyManager.DataTemplates;
 using MoneyManager.MVVM.Models;
@@ -21,7 +22,7 @@ using System.Windows.Input;
 namespace MoneyManager.MVVM.ViewModels
 {
     [AddINotifyPropertyChangedInterface]
-    public class AccountsViewModel
+    public class AccountsViewModel : BaseViewModel
     {
         public AccountDisplay CurrentAccountDisplay { get; set; } = new AccountDisplay();
         public ICommand AccountSelectedCommand { get; set; }
@@ -32,7 +33,7 @@ namespace MoneyManager.MVVM.ViewModels
             {
                 if (selectedAccountDisplay != value)
                 {
-                    OnNewAccountSelected(selectedAccountDisplay, value);
+                    OnNewItemSelected(selectedAccountDisplay.AccountView, value.AccountView);
                     selectedAccountDisplay = value;
                     Debug.WriteLine($"SelectedAccountDisplay: {selectedAccountDisplay.ToString()}");
                 }
@@ -44,7 +45,7 @@ namespace MoneyManager.MVVM.ViewModels
         public object SelectedItem { get; set; }
         private List<Account> Accounts { get; set; }
         private List<AccountView> AccountViews { get; set; }
-        private AccountDisplay selectedAccountDisplay;
+        private AccountDisplay selectedAccountDisplay = new AccountDisplay();
 
 
         public ObservableCollection<AccountDisplay> AccountDisplays { get; set; } = new ObservableCollection<AccountDisplay>();
@@ -81,7 +82,7 @@ namespace MoneyManager.MVVM.ViewModels
         public ICommand DeleteAccountCommand =>
             new Command(async () =>
             {
-                if (SelectedAccountDisplay is null)
+                if (SelectedAccountDisplay.AccountView is null)
                 {
                     await Application.Current.MainPage.DisplayAlert("You should select the account you want to delete", "", "OK");
                     return;
@@ -127,7 +128,7 @@ namespace MoneyManager.MVVM.ViewModels
         public ICommand OpenEditAccountPageCommand =>
             new Command(async () =>
             {
-                if (SelectedAccountDisplay is null)
+                if (SelectedAccountDisplay.AccountView is null)
                 {
                     await Application.Current.MainPage.DisplayAlert("You should select the account you want to edit","", "OK");
                     return;
@@ -142,12 +143,7 @@ namespace MoneyManager.MVVM.ViewModels
                 };
                 await Shell.Current.Navigation.PushAsync(accountManagmentPage);
             });
-        private void OnNewAccountSelected(AccountDisplay previousSelectedAccount, AccountDisplay currentSelectedAccount)
-        {
-            if (previousSelectedAccount is not null)
-                previousSelectedAccount.AccountView.IsSelected = false;
-            currentSelectedAccount.AccountView.IsSelected = true;
-        }
+
 
         #region DatabaseInteraction
         private async void DeleteAccountAsync()

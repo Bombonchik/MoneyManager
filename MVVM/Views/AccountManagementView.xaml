@@ -2,6 +2,7 @@
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="MoneyManager.MVVM.Views.AccountManagementView"
+             BackgroundColor="{AppThemeBinding Light={StaticResource LightPrimaryBackground}, Dark={StaticResource DarkPrimaryBackground}}"
              Shell.NavBarIsVisible="False">
     <Grid Padding="20" Margin="0, -8, 0, 0" RowDefinitions=".55*, .35*, .05*">
 
@@ -9,17 +10,17 @@
         <Border
             StyleClass="DataBorder25ShadowBlackWhite">
             <VerticalStackLayout>
-                <Label Text="{Binding ViewHeader}" StyleClass="TotalAccountDataName" FontSize="25"/>
+                <Label Text="{Binding ViewHeader}" StyleClass="DataName" FontSize="25"/>
                 <Label Text="Name" StyleClass="TotalAccountDataName" FontFamily="Regular" />
-                <Entry Placeholder="Print Account Name" Keyboard="Text" StyleClass="EntryAccountEdit" MaxLength="16"
+                <Entry Placeholder="Print Account Name" Keyboard="Text" StyleClass="EntryEdit" MaxLength="16"
                                 Text="{Binding NewAccountDisplay.Account.Name}"/>
                 <Label Text="Balance" StyleClass="TotalAccountDataName" FontFamily="Regular"/>
-                <Entry Placeholder="Print Account Balance" Keyboard="Numeric" StyleClass="EntryAccountEdit" MaxLength="10"
+                <Entry Placeholder="Print Account Balance" Keyboard="Numeric" StyleClass="EntryEdit" MaxLength="10"
                                Text="{Binding NewAccountDisplay.Account.Balance}"/>
 
                 <Label Text="Identifier " StyleClass="TotalAccountDataName" FontFamily="Regular"/>
                 <Label Text="(For example, a credit card number)" StyleClass="TotalAccountDataName" FontSize="12" FontFamily="Regular"/>
-                <Entry Placeholder="Print Identifier" StyleClass="EntryAccountEdit" MaxLength="256"
+                <Entry Placeholder="Print Identifier" StyleClass="EntryEdit" MaxLength="256"
                                Text="{Binding NewAccountDisplay.Account.Identifier}"/>
 
                 <Label Text="Type" StyleClass="TotalAccountDataName" FontFamily="Regular"/>
@@ -45,7 +46,7 @@
                         </DataTemplate>
                     </CollectionView.ItemTemplate>
                 </CollectionView>
-                <Entry Text="{Binding SelectedAccountType}" Placeholder="Print your own type" Keyboard="Text" StyleClass="EntryAccountEdit" MaxLength="16"/>
+                <Entry Text="{Binding SelectedAccountType}" Placeholder="Print your own type" Keyboard="Text" StyleClass="EntryEdit" MaxLength="16"/>
             </VerticalStackLayout>
         </Border>
 
@@ -57,7 +58,7 @@
             StyleClass="DataBorder25ShadowBlackWhite"
             Margin="0, 20,0,5">
             <Grid RowDefinitions=".15*,.85*">
-                <Label Grid.Row="0" Text="Select the icon" FontSize="25" StyleClass="TotalAccountDataName" HorizontalTextAlignment="Center" Margin="0,-6,0,0"/>
+                <Label Grid.Row="0" Text="Select the icon" FontSize="25" StyleClass="DataName" HorizontalTextAlignment="Center" Margin="0,-6,0,0"/>
                 <CollectionView  
                             Grid.Row="1"
                             ItemsSource="{Binding IconGlyphs}"

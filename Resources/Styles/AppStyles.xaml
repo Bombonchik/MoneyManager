@@ -21,10 +21,14 @@
         <Setter Property="Margin" Value="15" />
         <Setter Property="VerticalOptions" Value="Center" />
     </Style>
-    <Style Class="EntryAccountEdit" TargetType="Entry">
+    <Style Class="EntryEdit" TargetType="Entry">
         <Setter Property="FontFamily" Value="Regular" />
         <Setter Property="FontAttributes" Value="Bold" />
         <Setter Property="FontSize" Value="18" />
+    </Style>
+
+    <Style Class="TransactionPropertyEntry" TargetType="Entry">
+        <Setter Property="VerticalOptions" Value="Center" />
     </Style>
 
     <Style TargetType="Label">
@@ -131,7 +135,7 @@
 
         <Setter Property="StrokeShape" Value="{StaticResource Rec25}" />
         <Setter Property="Shadow" Value="{StaticResource CoolShadowBig}"/>
-        <Setter Property="StrokeThickness" Value="2"/>
+        <Setter Property="StrokeThickness" Value="3"/>
         <Setter Property="BackgroundColor" Value="#76A5AF"/>
         <Setter Property="Stroke" Value="White"/>
         <Setter Property="Padding" Value="10"/>
@@ -140,14 +144,7 @@
 
         <Setter Property="StrokeShape" Value="{StaticResource Rec25}" />
         <Setter Property="Shadow" Value="{StaticResource CoolShadow}"/>
-       
-    </Style>
-    <Style Class="Border25ShadowBlackWhite" TargetType="Border">
 
-        <Setter Property="StrokeShape" Value="{StaticResource Rec25}" />
-        <Setter Property="Shadow" Value="{StaticResource CoolShadowBlackWhiteBig}"/>
-        <Setter Property="StrokeThickness" Value="0"/>
-        <Setter Property="BackgroundColor" Value="Transparent"/>
     </Style>
     <Style Class="DataBorder25ShadowBlackWhite" TargetType="Border">
 
@@ -156,6 +153,13 @@
         <Setter Property="StrokeThickness" Value="0"/>
         <Setter Property="Padding" Value="14" />
         <Setter Property="BackgroundColor"  Value="{StaticResource Primary}"/>
+    </Style>
+    <Style Class="Border25ShadowBlackWhite" TargetType="Border">
+
+        <Setter Property="StrokeShape" Value="{StaticResource Rec25}" />
+        <Setter Property="Shadow" Value="{StaticResource CoolShadowBlackWhiteBig}"/>
+        <Setter Property="StrokeThickness" Value="0"/>
+        <Setter Property="BackgroundColor" Value="Transparent"/>
     </Style>
 
     <Style Class="AccountData" TargetType="Label">
@@ -167,6 +171,16 @@
         <Setter Property="VerticalOptions" Value="Center" />
         <Setter Property="HorizontalTextAlignment" Value="Center" />
         <Setter Property="FontFamily" Value="Regular" />
+    </Style>
+    <Style Class="CenterLabel" TargetType="Label">
+        <Setter Property="HorizontalOptions" Value="Center" />
+        <Setter Property="VerticalOptions" Value="Center" />
+        <Setter Property="HorizontalTextAlignment" Value="Center" />
+    </Style>
+    <Style Class="Strong" TargetType="Label">
+        <Setter Property="FontSize" Value="18"/>
+        <Setter Property="Margin" Value="5, 0, 5, 0"/>
+        <Setter Property="FontFamily" Value="Strong"/>
     </Style>
     <Style Class="AccountIdentifingData" TargetType="Label">
         <Setter Property="HorizontalTextAlignment" Value="End" />
@@ -183,7 +197,7 @@
         <Setter Property="Padding" Value="5"/>
         <Setter Property="FontFamily" Value="Strong"/>
         <Setter Property="CornerRadius" Value="25"/>
-        <Setter Property="FontSize" Value="15"/>
+        <Setter Property="FontSize" Value="16"/>
         <Setter Property="Shadow" Value="{StaticResource CoolShadow}"/>
         <Setter Property="TextColor" Value="{AppThemeBinding Light={StaticResource White}, Dark={StaticResource Primary}}"/>
     </Style>
@@ -193,8 +207,24 @@
         <Setter Property="VerticalOptions" Value="Center"/>
         <Setter Property="HorizontalOptions" Value="Center"/>
     </Style>
+    <Style Class="Small" TargetType="Button">
+        <Setter Property="Padding" Value="2"/>
+        <Setter Property="FontFamily" Value="Strong"/>
+        <Setter Property="CornerRadius" Value="25"/>
+        <Setter Property="FontSize" Value="14"/>
+        <Setter Property="Shadow" Value="{StaticResource CoolShadow}"/>
+        <Setter Property="TextColor" Value="{AppThemeBinding Light={StaticResource White}, Dark={StaticResource Primary}}"/>
+    </Style>
 
-    <Style Class="TotalAccountDataName" TargetType="Label">
+    <Style Class="ItemPicker" TargetType="Border">
+        <Setter Property="WidthRequest" Value="120"/>
+        <Setter Property="Padding" Value="3"/>
+        <Setter Property="BackgroundColor" Value="{AppThemeBinding Light={StaticResource MyPurple}, Dark={StaticResource White}}"/>
+        <Setter Property="StrokeShape" Value="{StaticResource Rec25}" />
+        
+    </Style>
+
+    <Style Class="DataName" TargetType="Label">
        
         <Setter Property="FontSize" Value="20"/>
         <Setter Property="Shadow" Value="{StaticResource whiteToBlackShadowBig}"/>
@@ -210,6 +240,15 @@
         <Setter Property="TextColor" Value="{StaticResource White}"/>
     </Style>
 
+    <Style Class="TransactionProperty" TargetType="Grid">
+        <Setter Property="HeightRequest" Value="54"/>
+        <Setter Property="ColumnDefinitions" Value=".26*, .74*"/>
+    </Style>
+
+    <Style Class="TransactionPropertyName" TargetType="Label">
+        <Setter Property="VerticalOptions" Value="Center"/>
+        <Setter Property="FontSize" Value="20"/>
+    </Style>
     <Style
         ApplyToDerivedTypes="True"
         Class="Padding25"

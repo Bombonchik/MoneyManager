@@ -7,6 +7,7 @@ public partial class TransactionManagementView : ContentPage
 	public TransactionManagementView()
 	{
 		InitializeComponent();
-		BindingContext = new TransactionManagementViewModel();
+        NavigationPage.SetHasNavigationBar(this, false);
+        BindingContext = new TransactionManagementViewModel();
 	}
 }

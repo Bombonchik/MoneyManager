@@ -1,4 +1,5 @@
 ﻿using MoneyManager.Abstractions;
+using MoneyManager.MVVM.Models;
 using PropertyChanged;
 using System;
 using System.Collections.Generic;
@@ -9,9 +10,9 @@ using System.Threading.Tasks;
 namespace MoneyManager.DataTemplates
 {
     [AddINotifyPropertyChangedInterface]
-    public class GlyphView : ISelectable
+    public class TransactionTypeView : ISelectable
     {
-        public string Glyph { get; set; }
+        public TransactionType Type { get; set; }
         public bool IsSelected { get; set; }
         public Color StrokeColor
         {
@@ -20,8 +21,10 @@ namespace MoneyManager.DataTemplates
                 if (IsSelected)
                 {
                     return Application.Current.PlatformAppTheme == AppTheme.Light ?
-                        Color.FromArgb("#852BD4") :
-                        Colors.White;
+                        //Color.FromArgb("#00B7C3") :
+                        Color.FromArgb("#10BFFF") :
+                        Color.FromArgb("#852BD4");
+          
                 }
                 return Colors.Transparent;
             }

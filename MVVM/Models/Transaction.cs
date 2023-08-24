@@ -21,14 +21,13 @@ namespace MoneyManager.MVVM.Models
         // For Income and Expense, this will be the account involved.
         // For Transfer, this will be the source account.
         [ForeignKey(typeof(Account))]
-        public int? SourceAccountId { get; set; }
+        public int SourceAccountId { get; set; }
 
         // For Transfer, this will be the destination account.
         [ForeignKey(typeof(Account))]
         public int? DestinationAccountId { get; set; }
 
         [ForeignKey(typeof(RecurringTransaction))]
-        [OneToOne(CascadeOperations = CascadeOperation.All)]
         public int? RecurringTransactionId { get; set; }
         [ForeignKey(typeof(Category))]
         public int? CategoryId { get; set; }

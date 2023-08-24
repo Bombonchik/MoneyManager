@@ -28,7 +28,14 @@
     </Style>
 
     <Style Class="TransactionPropertyEntry" TargetType="Entry">
+        <Setter Property="Grid.Column" Value="1" />
         <Setter Property="VerticalOptions" Value="Center" />
+        <Setter Property="PlaceholderColor" Value="{AppThemeBinding Light={StaticResource MyAqua}, Dark={StaticResource MyPurple}}" />
+    </Style>
+
+    <Style Class="TransactionPropertyButton" TargetType="Button">
+        <Setter Property="Grid.Column" Value="1" />
+        <Setter Property="BackgroundColor" Value="Transparent" />
     </Style>
 
     <Style TargetType="Label">
@@ -90,6 +97,12 @@
         Opacity="1"
         Radius="1"
         Offset="2, 2" />
+    <Shadow
+        x:Key="whiteToBlackShadowCool"
+        Brush="Black"
+        Opacity="0.9"
+        Radius="4"
+        Offset="4, 4" />
     <Style Class="AccountImageStyle" TargetType="Image">
         <Setter Property="Grid.Column" Value="0" />
         <Setter Property="Grid.ColumnSpan" Value="1" />

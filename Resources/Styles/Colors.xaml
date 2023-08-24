@@ -28,6 +28,7 @@
     <Color x:Key="LightStrokeColor">#852BD4</Color>
     <Color x:Key="DarkStrokeColor">White</Color>
     <Color x:Key="MyPurple">#5154E8</Color>
+    <Color x:Key="MyAqua">#10BFFF</Color>
 
     <Color x:Key="Primary">#6F70D4</Color>
     <Color x:Key="Secondary">#DFD8F7</Color>

@@ -3,7 +3,6 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="MoneyManager.MVVM.Views.AccountsView"
              xmlns:local="clr-namespace:MoneyManager.MVVM.ViewModels"
-             xmlns:selectors="clr-namespace:MoneyManager.Selectors"
              xmlns:converters="clr-namespace:MoneyManager.Converters"
              BackgroundColor="{AppThemeBinding Light={StaticResource LightPrimaryBackground}, Dark={StaticResource DarkPrimaryBackground}}" >
     <ContentPage.Resources>
@@ -89,7 +88,8 @@
 
                             <!-- Icon and Percentage -->
                             <Image
-                                StyleClass="AccountImageStyle">
+                                StyleClass="AccountImageStyle"
+                                IsOpaque="True">
                                 <Image.Source>
                                     <FontImageSource
                                         FontFamily="PaymentFont"
@@ -115,11 +115,12 @@
                                    FontSize="12"/>
                             <!-- Account Name centered -->
                             <Label Text="{Binding Account.Name}" 
-                                   StyleClass="AccountData"
+                                   WidthRequest="160"
                                    Grid.Row="2" 
                                    Grid.ColumnSpan="2" 
                                    FontSize="16"
-                                   Margin="-10, 0, -10, 0" />
+                                   StyleClass="AccountData"
+                                   FontAttributes="Bold"/>
 
                             <!-- Balance (spanning both columns) -->
                             <Label Text="{Binding Account.Balance, StringFormat='{0:C}'}" 

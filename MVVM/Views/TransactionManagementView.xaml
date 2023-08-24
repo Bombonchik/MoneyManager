@@ -10,9 +10,9 @@
     </ContentPage.Resources>
 
 
-    <Grid RowDefinitions=".07*, .4*, .53* " Padding="14">
+    <Grid RowDefinitions=".07*, .4*, .47*, .06*" Padding="14">
         <CollectionView  
-            Grid.Row="0" Margin="0,0,0,0"
+            Grid.Row="0"
             ItemsSource="{Binding TransactionTypes}"
             SelectionMode="Single"
             SelectedItem="{Binding SelectedTransactionType}"
@@ -46,23 +46,23 @@
                 </Grid>
                 <Grid StyleClass="TransactionProperty" IsVisible="{Binding TransferIndicator, Converter={StaticResource BoolInverter}}">
                     <Label Text="Account" StyleClass="DataName, TransactionPropertyName"/>
-                    <Entry Grid.Column="1" VerticalOptions="Center"/>
-                    <Button BackgroundColor="Transparent" Grid.Column="1"/>
+                    <Entry Placeholder="{Binding AccountPlaceholder}" Text="{Binding SelectedAccount.Name}" StyleClass="EntryEdit, TransactionPropertyEntry"/>
+                    <Button Command="{Binding SelectAccountCommand}" StyleClass="TransactionPropertyButton"/>
                 </Grid>
                 <Grid StyleClass="TransactionProperty" IsVisible="{Binding TransferIndicator}">
                     <Label Text="From" StyleClass="DataName, TransactionPropertyName"/>
-                    <Entry Grid.Column="1" VerticalOptions="Center"/>
-                    <Button BackgroundColor="Transparent" Grid.Column="1"/>
+                    <Entry Placeholder="{Binding AccountFromPlaceholder}" Text="{Binding SelectedAccountFrom.Name}" StyleClass="EntryEdit, TransactionPropertyEntry"/>
+                    <Button Command="{Binding SelectAccountFromCommand}" StyleClass="TransactionPropertyButton"/>
                 </Grid>
                 <Grid StyleClass="TransactionProperty" IsVisible="{Binding TransferIndicator, Converter={StaticResource BoolInverter}}">
                     <Label Text="Category" StyleClass="DataName, TransactionPropertyName"/>
-                    <Entry Grid.Column="1" VerticalOptions="Center"/>
-                    <Button BackgroundColor="Transparent" Grid.Column="1"/>
+                    <Entry Placeholder="{Binding CategoryPlaceholder}" Text="{Binding CurrentCategory.Name}" StyleClass="EntryEdit, TransactionPropertyEntry"/>
+                    <Button Command="{Binding SelectCategoryCommand}" StyleClass="TransactionPropertyButton"/>
                 </Grid>
                 <Grid StyleClass="TransactionProperty" IsVisible="{Binding TransferIndicator}">
                     <Label Text="To" StyleClass="DataName, TransactionPropertyName"/>
-                    <Entry Grid.Column="1" VerticalOptions="Center"/>
-                    <Button BackgroundColor="Transparent" Grid.Column="1"/>
+                    <Entry Placeholder="{Binding AccountToPlaceholder}" Text="{Binding SelectedAccountTo.Name}" StyleClass="EntryEdit, TransactionPropertyEntry"/>
+                    <Button Command="{Binding SelectAccountToCommand}" StyleClass="TransactionPropertyButton"/>
                 </Grid>
                 <Grid StyleClass="TransactionProperty">
                     <Label Text="Amount" StyleClass="DataName, TransactionPropertyName"/>
@@ -75,7 +75,85 @@
 
             </VerticalStackLayout>
         </Border>
-            
-        <Button Grid.Row="2" IsVisible="True" Text="Close Page" Command="{Binding ClosePageCommand}" HeightRequest="26"/>
+        <Border
+            Grid.Row="2"
+            Margin="0,16,0,14"
+            StyleClass="DataBorder25ShadowBlackWhite"
+            HeightRequest="325"
+            IsVisible="{Binding IsAccountsCollectionViewVisible}">
+            <Grid RowDefinitions=".15*,.85*">
+                <Label Grid.Row="0" Text="Accounts" FontSize="25" StyleClass="DataName" HorizontalTextAlignment="Center" Margin="0,-6,0,0"/>
+                <CollectionView  
+                            Grid.Row="1"
+                            ItemsSource="{Binding Accounts}"
+                            SelectionMode="Single"
+                            SelectedItem="{Binding CurrentAccount}">
+                    <CollectionView.ItemsLayout>
+                        <GridItemsLayout Orientation="Vertical" Span="2" VerticalItemSpacing="6" HorizontalItemSpacing="5"/>
+                    </CollectionView.ItemsLayout>
+                    <CollectionView.ItemTemplate>
+                        <DataTemplate>
+                            <Border            
+                                StyleClass="Border25AccountTypes"
+                                Shadow="{StaticResource whiteToBlackShadowCool}"
+                                StrokeThickness="1.5">
+                                <Label Text="{Binding Name}" 
+                                    StyleClass="WhiteTextLabel, CenterLabel"
+                                    FontFamily="Strong"
+                                    FontSize="18"
+                                    Margin="5,0,5,0"/>
+                            </Border>
+                        </DataTemplate>
+                    </CollectionView.ItemTemplate>
+                </CollectionView>
+            </Grid>
+        </Border>
+        <Border
+            Grid.Row="2"
+            Margin="0,16,0,14"
+            StyleClass="DataBorder25ShadowBlackWhite"
+            HeightRequest="325"
+            IsVisible="{Binding IsCategoriesCollectionViewVisible}">
+            <Grid RowDefinitions=".15*,.85*">
+                <Label Grid.Row="0" Text="Categories" FontSize="25" StyleClass="DataName" HorizontalTextAlignment="Center" Margin="0,-6,0,0"/>
+                <CollectionView  
+                            Grid.Row="1"
+                            ItemsSource="{Binding CurrentCategories}"
+                            SelectionMode="Single"
+                            SelectedItem="{Binding CurrentCategory}">
+                    <CollectionView.ItemsLayout>
+                        <GridItemsLayout Orientation="Vertical" Span="2" VerticalItemSpacing="6" HorizontalItemSpacing="5"/>
+                    </CollectionView.ItemsLayout>
+                    <CollectionView.ItemTemplate>
+                        <DataTemplate>
+                            <Border            
+                                StyleClass="Border25AccountTypes"
+                                Shadow="{StaticResource whiteToBlackShadowCool}"
+                                StrokeThickness="1.5">
+                                <Label Text="{Binding Name}" 
+                                    StyleClass="WhiteTextLabel, CenterLabel"
+                                    FontFamily="Strong"
+                                    FontSize="18"
+                                    Margin="5,0,5,0"
+                                    WidthRequest="150"/>
+                            </Border>
+                        </DataTemplate>
+                    </CollectionView.ItemTemplate>
+                </CollectionView>
+            </Grid>
+        </Border>
+        <HorizontalStackLayout
+            Grid.Row="3"
+            Margin="0,0,0,0"
+            StyleClass="AccountEditingButtons">
+            <Button  Text="Save" 
+                     StyleClass="AccountEditingButton"
+                     Command="{Binding SaveTransactionCommand}"
+                     WidthRequest="150"/>
+            <Button  Text="Cancel" 
+                     StyleClass="AccountEditingButton"
+                     Command="{Binding CancelTransactionCommand}"
+                     WidthRequest="150"/>
+        </HorizontalStackLayout>
     </Grid>
 </ContentPage>

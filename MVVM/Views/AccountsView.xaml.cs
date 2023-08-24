@@ -13,5 +13,10 @@ public partial class AccountsView : ContentPage
         BindingContext = new AccountsViewModel();
     }
 
+    protected override void OnAppearing()
+    {
+        base.OnAppearing();
+        //MyCollectionView.InvalidateLayout();
 
+    }
 }

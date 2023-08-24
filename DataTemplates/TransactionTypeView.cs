@@ -21,7 +21,6 @@ namespace MoneyManager.DataTemplates
                 if (IsSelected)
                 {
                     return Application.Current.PlatformAppTheme == AppTheme.Light ?
-                        //Color.FromArgb("#00B7C3") :
                         Color.FromArgb("#10BFFF") :
                         Color.FromArgb("#852BD4");
           

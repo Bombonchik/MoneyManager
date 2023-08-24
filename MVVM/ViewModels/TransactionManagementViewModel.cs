@@ -1,10 +1,13 @@
-﻿using MoneyManager.Abstractions;
+﻿using CommunityToolkit.Mvvm.Messaging;
+using MoneyManager.Abstractions;
 using MoneyManager.DataTemplates;
+using MoneyManager.Messages;
 using MoneyManager.MVVM.Models;
 using PropertyChanged;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -19,8 +22,12 @@ namespace MoneyManager.MVVM.ViewModels
     {
         private TransactionTypeView selectedTransactionType;
         public bool IsEditMode { get; private set; }
+        private readonly IMessenger Messenger = WeakReferenceMessenger.Default;
         public TransactionDisplay NewTransactionDisplay { get; set; }
+
         public TimeSpan SelectedTime { get; set; }
+        private Dictionary<int, Account> AccountLookup { get; set; }
+        private ObservableCollection<Account> Accounts { get; set; }
 
         public TransactionTypeView SelectedTransactionType
         {
@@ -36,6 +43,7 @@ namespace MoneyManager.MVVM.ViewModels
         }
         public ObservableCollection<TransactionTypeView> TransactionTypes { get; set; }
         public bool TransferIndicator { get; set; }
+        
         public ICommand ClosePageCommand =>
             new Command(() =>
             {
@@ -45,16 +53,39 @@ namespace MoneyManager.MVVM.ViewModels
             });
         public TransactionManagementViewModel(TransactionDisplay existingTransactionDisplay = null)
         {
-            TransactionTypes = new ();
+            Accounts = new();
+            TransactionTypes = new();
             foreach (TransactionType transactionType in Enum.GetValues(typeof(TransactionType)))
-            {
                 TransactionTypes.Add(new TransactionTypeView { Type = transactionType, IsSelected = false  });
-            }
+            Messenger.Register<AccountAddedMessage>(this, OnAccountAdded);
+            Messenger.Register<AccountDeletedMessage>(this, OnAccountDeleted);
+            Messenger.Register<ResponseAccountsMessage>(this, HandleAccountResponse);
+            Messenger.Send(new RequestAccountsMessage(this));
             if (existingTransactionDisplay is not null)
                 InitializeEditMode(existingTransactionDisplay);
             else
                 InitializeNormalMode();
         }
+
+        private void OnAccountDeleted(object recipient, AccountDeletedMessage message)
+        {
+            if (message.Sender == this) return;
+            Accounts.Remove(message.DeletedAccount);
+        }
+
+        private void HandleAccountResponse(object recipient, ResponseAccountsMessage message)
+        {
+            if (message.Sender != this) return;
+            AccountLookup = message.Accounts;
+            Accounts = new ObservableCollection<Account>(AccountLookup.Values);
+        }
+
+        private void OnAccountAdded(object recipient, AccountAddedMessage message)
+        {
+            if (message.Sender == this) return;
+            Accounts.Add(AccountLookup[message.NewAccount.Id]);
+        }
+
         private void InitializeEditMode(TransactionDisplay existingTransactionDisplay)
         {
             IsEditMode = true;
@@ -67,6 +98,9 @@ namespace MoneyManager.MVVM.ViewModels
             IsEditMode = false;
             NewTransactionDisplay = new TransactionDisplay { Transaction = new Transaction(), TransactionView = new TransactionView() };
             SelectedTransactionType = TransactionTypes.Where(x => x.Type == TransactionType.Expense).FirstOrDefault();
+            NewTransactionDisplay.Transaction.DateTime = DateTime.Now;
+            SelectedTime = NewTransactionDisplay.Transaction.DateTime.TimeOfDay;
+
         }
     }
 }

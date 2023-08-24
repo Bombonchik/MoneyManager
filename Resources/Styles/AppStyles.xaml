@@ -208,10 +208,10 @@
         <Setter Property="HorizontalOptions" Value="Center"/>
     </Style>
     <Style Class="Small" TargetType="Button">
-        <Setter Property="Padding" Value="2"/>
+        <Setter Property="Padding" Value="5,2,5,2"/>
         <Setter Property="FontFamily" Value="Strong"/>
         <Setter Property="CornerRadius" Value="25"/>
-        <Setter Property="FontSize" Value="14"/>
+        <Setter Property="FontSize" Value="12"/>
         <Setter Property="Shadow" Value="{StaticResource CoolShadow}"/>
         <Setter Property="TextColor" Value="{AppThemeBinding Light={StaticResource White}, Dark={StaticResource Primary}}"/>
     </Style>

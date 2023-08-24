@@ -72,9 +72,7 @@ namespace MoneyManager.MVVM.ViewModels
                 NewAccountDisplay.AccountView.Icon = selectedIcon.Glyph;
                 if (!IsEditMode)
                     await ProcessSavingInNormalMode();
-                await App.AccountsRepo.SaveItemAsync(NewAccountDisplay.Account);
                 Debug.WriteLine($"Save: {NewAccountDisplay.Account}");
-                await App.AccountViewsRepo.SaveItemAsync(NewAccountDisplay.AccountView);
                 Debug.WriteLine($"Save: {NewAccountDisplay.AccountView}");
                 ClosePage(NewAccountDisplay);
             });

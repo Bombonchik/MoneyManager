@@ -21,11 +21,10 @@ namespace MoneyManager.MVVM.Models
         [NotNull]
         public string Type { get; set; }
         [ForeignKey(typeof(AccountView))]
-        [OneToOne(CascadeOperations = CascadeOperation.All)]
         public int AccountViewId { get; set; }
         public override string ToString()
         {
             return $"Account: Id: {Id}, Name: {Name}, Balance: {Balance:C}, Identifier: {Identifier}, Type: {Type}, AccountViewId: {AccountViewId}";
         }
-    }
+    }   
 }

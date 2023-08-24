@@ -11,19 +11,19 @@
             StyleClass="DataBorder25ShadowBlackWhite">
             <VerticalStackLayout>
                 <Label Text="{Binding ViewHeader}" StyleClass="DataName" FontSize="25"/>
-                <Label Text="Name" StyleClass="TotalAccountDataName" FontFamily="Regular" />
+                <Label Text="Name" StyleClass="DataName" FontFamily="Regular" />
                 <Entry Placeholder="Print Account Name" Keyboard="Text" StyleClass="EntryEdit" MaxLength="16"
                                 Text="{Binding NewAccountDisplay.Account.Name}"/>
-                <Label Text="Balance" StyleClass="TotalAccountDataName" FontFamily="Regular"/>
+                <Label Text="Balance" StyleClass="DataName" FontFamily="Regular"/>
                 <Entry Placeholder="Print Account Balance" Keyboard="Numeric" StyleClass="EntryEdit" MaxLength="10"
                                Text="{Binding NewAccountDisplay.Account.Balance}"/>
 
-                <Label Text="Identifier " StyleClass="TotalAccountDataName" FontFamily="Regular"/>
+                <Label Text="Identifier " StyleClass="DataName" FontFamily="Regular"/>
                 <Label Text="(For example, a credit card number)" StyleClass="TotalAccountDataName" FontSize="12" FontFamily="Regular"/>
                 <Entry Placeholder="Print Identifier" StyleClass="EntryEdit" MaxLength="256"
                                Text="{Binding NewAccountDisplay.Account.Identifier}"/>
 
-                <Label Text="Type" StyleClass="TotalAccountDataName" FontFamily="Regular"/>
+                <Label Text="Type" StyleClass="DataName" FontFamily="Regular"/>
                 <CollectionView  
                         Grid.Row="1" Margin="0,10,0,0"
                         ItemsSource="{Binding AccountTypes}"

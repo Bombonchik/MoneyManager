@@ -1,8 +1,10 @@
 ﻿using Bogus;
 using Bogus.DataSets;
+using CommunityToolkit.Mvvm.Messaging;
 using MoneyManager.Abstractions;
 using MoneyManager.Constants;
 using MoneyManager.DataTemplates;
+using MoneyManager.Messages;
 using MoneyManager.MVVM.Models;
 using MoneyManager.MVVM.Views;
 using PropertyChanged;
@@ -13,7 +15,6 @@ using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.Linq;
-using System.Runtime.CompilerServices;
 using System.Security.Principal;
 using System.Text;
 using System.Threading.Tasks;
@@ -24,6 +25,8 @@ namespace MoneyManager.MVVM.ViewModels
     [AddINotifyPropertyChangedInterface]
     public class AccountsViewModel : BaseViewModel
     {
+        private readonly IMessenger Messenger = WeakReferenceMessenger.Default;
+
         public AccountDisplay CurrentAccountDisplay { get; set; } = new AccountDisplay();
         public ICommand AccountSelectedCommand { get; set; }
 
@@ -39,37 +42,57 @@ namespace MoneyManager.MVVM.ViewModels
                 }
             }
         }
-
+        private Dictionary<int, Account> AccountLookup { get; set; }
+        private Dictionary<int, DeletedAccount> DeletedAccountLookup { get; set; }
         public CachedAccountsData CachedAccountsData { get; set; }
         private decimal CurrentTotalBalance { get; set; }
         public object SelectedItem { get; set; }
-        private List<Account> Accounts { get; set; }
-        private List<AccountView> AccountViews { get; set; }
         private AccountDisplay selectedAccountDisplay = new AccountDisplay();
 
-
         public ObservableCollection<AccountDisplay> AccountDisplays { get; set; } = new ObservableCollection<AccountDisplay>();
-
         public AccountsViewModel() 
         {
             _ = InitializeAsync();
         }
-        private async Task InitializeAsync(bool generateNewData = false)
+        private async Task InitializeAsync(int accountsToGenerateCount = 0)
         {
-            AccountDisplays = await GetAccountDisplaysAsync();
+            await ProcessAccounts();
+            await ProcessDeletedAccounts();
+            if (accountsToGenerateCount > 0)
+                FillDataAsync(AccountDisplays.Count, accountsToGenerateCount);
             Debug.WriteLine(AccountDisplays.MyToString());
             CachedAccountsData = await App.CachedAccountsDataService.GetSafelyLastCashedAccountsDataAsync(RecalculateTotalBalance);
             Debug.WriteLine(CachedAccountsData.ToString());
-            if (generateNewData)
-                FillDataAsync(AccountDisplays.Count);
-            //CurrentTotalBalance = RecalculateAllBalances
+            Messenger.Register<RequestAccountsMessage>(this, HandleAccountRequest);
+        
         }
+
+        private void HandleAccountRequest(object recipient, RequestAccountsMessage message)
+        {
+            Messenger.Send(new ResponseAccountsMessage(AccountLookup, message.Sender));
+        }
+
+        private async Task ProcessAccounts()
+        {
+            AccountDisplays = await GetAccountDisplaysAsync();
+            AccountLookup = new Dictionary<int, Account>();
+            foreach (var accountDisplay in AccountDisplays)
+                AccountLookup[accountDisplay.Account.Id] = accountDisplay.Account;
+        }
+        private async Task ProcessDeletedAccounts()
+        {
+            var deletedAccounts = await GetDeletedAccountsAsync();
+            DeletedAccountLookup = new Dictionary<int, DeletedAccount>();
+            foreach (var deletedAccount in deletedAccounts)
+                DeletedAccountLookup[deletedAccount.DeletedAccountId] = deletedAccount;
+        }
+
         private decimal RecalculateTotalBalance()
         {
             decimal balance = 0;
-            foreach (var account in Accounts) 
+            foreach (var accountDisplay in AccountDisplays) 
             { 
-                balance += account.Balance;
+                balance += accountDisplay.Account.Balance;
             }
             return balance;
         }
@@ -92,23 +115,17 @@ namespace MoneyManager.MVVM.ViewModels
                 if (response)
                 {
                     await ChangeTotalBalanceAsync(-SelectedAccountDisplay.Account.Balance);
-                    await App.RecurringTransactionsService.DeleteRecurringTransactionsAssociatedWithAccountAsync(SelectedAccountDisplay.Account);
-                    await App.DeletedAccountRepo.SaveItemAsync(new DeletedAccount
-                    { DeletedAccountId = SelectedAccountDisplay.Account.Id, Name = SelectedAccountDisplay.Account.Name });
-                    await App.AccountsRepo.DeleteItemAsync(SelectedAccountDisplay.Account);
-                    await App.AccountViewsRepo.DeleteItemAsync(SelectedAccountDisplay.AccountView);
+                    await DeleteAccountAsync(SelectedAccountDisplay.Account);
+                    await DeleteAccountViewAsync(SelectedAccountDisplay.AccountView);
                     Debug.WriteLine($"Remove from AccountDisplays: {SelectedAccountDisplay}");
                     AccountDisplays.Remove(SelectedAccountDisplay);
                     Debug.WriteLine($"Current : {AccountDisplays.MyToString()}");
                     Debug.WriteLine($"Remove from Accounts: {SelectedAccountDisplay.Account}");
-                    Accounts.Remove(SelectedAccountDisplay.Account);
-                    Debug.WriteLine($"Current : {Accounts.MyToString()}");
                     Debug.WriteLine($"Remove from AccountViews: {SelectedAccountDisplay.AccountView}");
-                    AccountViews.Remove(SelectedAccountDisplay.AccountView);
-                    Debug.WriteLine($"Current : {AccountViews.MyToString()}");
-                    selectedAccountDisplay = null;
-                    List<DeletedAccount> deletedAccounts = await App.DeletedAccountRepo.GetItemsAsync();
-                    Debug.WriteLine($"DeletedAccounts : {deletedAccounts.MyToString()}");
+                    selectedAccountDisplay = new AccountDisplay();
+                    
+                    //List<DeletedAccount> deletedAccounts = await App.DeletedAccountRepo.GetItemsAsync();
+                    //Debug.WriteLine($"DeletedAccounts : {deletedAccounts.MyToString()}");
                 }
             });
         public ICommand OpenAddNewAccountPageCommand =>
@@ -119,6 +136,8 @@ namespace MoneyManager.MVVM.ViewModels
                 viewModel.AccountSavedCallback = async (newAccountDisplay) =>
                 {
                     AccountDisplays.Add(newAccountDisplay);
+                    await SaveAccountViewAsync(newAccountDisplay.AccountView);
+                    await SaveAccountAsync(newAccountDisplay.Account);
                     Debug.WriteLine(AccountDisplays.MyToString());
                     SelectedAccountDisplay = newAccountDisplay;
                     await ChangeTotalBalanceAsync(newAccountDisplay.Account.Balance);
@@ -138,6 +157,7 @@ namespace MoneyManager.MVVM.ViewModels
                 var viewModel = ((AccountManagementViewModel)accountManagmentPage.BindingContext);
                 viewModel.AccountSavedCallback = async (newAccountDisplay) =>
                 {
+                    await UpdateAccountAsync(newAccountDisplay.Account);
                     await ChangeTotalBalanceAsync(newAccountDisplay.Account.Balance - currentSelectedAccountBalance);
                     SelectedAccountDisplay = new AccountDisplay { Account = newAccountDisplay.Account, AccountView = newAccountDisplay.AccountView };
                 };
@@ -146,17 +166,42 @@ namespace MoneyManager.MVVM.ViewModels
 
 
         #region DatabaseInteraction
-        private async void DeleteAccountAsync()
+        private async Task SaveAccountAsync(Account account)
         {
-            await App.AccountsRepo.DeleteItemAsync(CurrentAccountDisplay.Account);
+            await App.AccountsRepo.SaveItemAsync(account);
+            AccountLookup.Add(account.Id, account);
+            Messenger.Send(new AccountAddedMessage(account, this));
         }
-        public static async Task<List<Account>> GetAccountsAsync()
+        private async Task UpdateAccountAsync(Account account)
+        {
+            await App.AccountsRepo.SaveItemAsync(account);
+            AccountLookup[account.Id] = account;
+            Messenger.Send(new AccountUpdatedMessage(account, this));
+        }
+        private async Task SaveAccountViewAsync(AccountView accountView)
+        {
+            await App.AccountViewsRepo.SaveItemAsync(accountView);
+        }
+        private async Task DeleteAccountAsync(Account account)
+        {
+            await App.AccountsRepo.DeleteItemAsync(account);
+            var deletedAccount = new DeletedAccount { DeletedAccountId = account.Id, Name = account.Name };
+            await App.DeletedAccountRepo.SaveItemAsync(deletedAccount);
+            DeletedAccountLookup.Add(deletedAccount.DeletedAccountId, deletedAccount);
+            AccountLookup.Remove(deletedAccount.DeletedAccountId);
+            Messenger.Send(new AccountDeletedMessage(account, this));
+        }
+        public async Task<List<Account>> GetAccountsAsync()
         {
             return await App.AccountsRepo.GetItemsAsync();
         }
-        private async void DeleteAccountViewAsync()
+        public async Task<List<DeletedAccount>> GetDeletedAccountsAsync()
         {
-            await App.AccountViewsRepo.DeleteItemAsync(CurrentAccountDisplay.AccountView);
+            return await App.DeletedAccountRepo.GetItemsAsync();
+        }
+        private async Task DeleteAccountViewAsync(AccountView accountView)
+        {
+            await App.AccountViewsRepo.DeleteItemAsync(accountView);
         }
 
         public static async Task<List<AccountView>> GetAccountsAccountViewsAsync()
@@ -166,10 +211,8 @@ namespace MoneyManager.MVVM.ViewModels
         
         private async Task<ObservableCollection<AccountDisplay>> GetAccountDisplaysAsync()
         {
-            var accounts = await GetAccountsAsync();  // Fetch all accounts from the database
+            var accounts = await GetAccountsAsync();
             var accountViews = await GetAccountsAccountViewsAsync();  // Fetch all account views from the database
-            Accounts = accounts;
-            AccountViews = accountViews;
             // Create a dictionary for AccountView objects indexed by AccountId
             Dictionary<int, AccountView>  accountViewDict = accountViews.ToDictionary(av => av.AccountId);
             
@@ -191,18 +234,17 @@ namespace MoneyManager.MVVM.ViewModels
         }
         #endregion
         #region DataGeneration
-        private async void FillDataAsync(int currentAccountNumber)
+        private async void FillDataAsync(int currentAccountNumber, int accountsToGenerateCount)
         {
             decimal totalBalanceChange = 0;
-            for (int i = 0; i < DisplayConstants.IconGlyphs.Count; i++)
+            for (int i = 0; i < accountsToGenerateCount; i++)
             {
                 CurrentAccountDisplay = new AccountDisplay(); 
                 currentAccountNumber++;
                 GenerateNewAccount(currentAccountNumber);
                 GenerateNewAccountView(currentAccountNumber);
-                await App.AccountsRepo.SaveItemAsync(CurrentAccountDisplay.Account);
-                await App.AccountViewsRepo.SaveItemAsync(CurrentAccountDisplay.AccountView);
-                await Console.Out.WriteLineAsync(App.AccountsRepo.StatusMessage);
+                await SaveAccountAsync(CurrentAccountDisplay.Account);
+                await SaveAccountViewAsync(CurrentAccountDisplay.AccountView);
                 await Console.Out.WriteLineAsync(App.AccountViewsRepo.StatusMessage);
                 AccountDisplays.Add(CurrentAccountDisplay);
                 totalBalanceChange += CurrentAccountDisplay.Account.Balance;
@@ -239,6 +281,7 @@ namespace MoneyManager.MVVM.ViewModels
         #endregion
     }
 
+    #region CollectionExtensions
     public static class ObservableCollectionExtensions
     {
         public static string MyToString<T>(this ObservableCollection<T> collection)
@@ -277,4 +320,5 @@ namespace MoneyManager.MVVM.ViewModels
             return sb.ToString();
         }
     }
+    #endregion
 }

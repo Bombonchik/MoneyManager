@@ -123,9 +123,6 @@ namespace MoneyManager.MVVM.ViewModels
                     Debug.WriteLine($"Remove from Accounts: {SelectedAccountDisplay.Account}");
                     Debug.WriteLine($"Remove from AccountViews: {SelectedAccountDisplay.AccountView}");
                     selectedAccountDisplay = new AccountDisplay();
-                    
-                    //List<DeletedAccount> deletedAccounts = await App.DeletedAccountRepo.GetItemsAsync();
-                    //Debug.WriteLine($"DeletedAccounts : {deletedAccounts.MyToString()}");
                 }
             });
         public ICommand OpenAddNewAccountPageCommand =>
@@ -211,7 +208,7 @@ namespace MoneyManager.MVVM.ViewModels
         
         private async Task<ObservableCollection<AccountDisplay>> GetAccountDisplaysAsync()
         {
-            var accounts = await GetAccountsAsync();  // Fetch all accounts from the database
+            var accounts = await GetAccountsAsync();
             var accountViews = await GetAccountsAccountViewsAsync();  // Fetch all account views from the database
             // Create a dictionary for AccountView objects indexed by AccountId
             Dictionary<int, AccountView>  accountViewDict = accountViews.ToDictionary(av => av.AccountId);

@@ -35,7 +35,6 @@ public static class MauiProgram
         builder.Services.AddSingleton<CachedAccountsDataService>();
         builder.Services.AddSingleton<RecurringTransactionsService>();
         builder.Services.AddSingleton<ColorService>();
-        builder.Services.AddSingleton<AccountService>();
 
 
 

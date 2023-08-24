@@ -211,7 +211,7 @@ namespace MoneyManager.MVVM.ViewModels
         
         private async Task<ObservableCollection<AccountDisplay>> GetAccountDisplaysAsync()
         {
-            var accounts = await GetAccountsAsync();
+            var accounts = await GetAccountsAsync();  // Fetch all accounts from the database
             var accountViews = await GetAccountsAccountViewsAsync();  // Fetch all account views from the database
             // Create a dictionary for AccountView objects indexed by AccountId
             Dictionary<int, AccountView>  accountViewDict = accountViews.ToDictionary(av => av.AccountId);

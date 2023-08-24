@@ -166,7 +166,7 @@ namespace MoneyManager.MVVM.ViewModels
         
         private async Task<ObservableCollection<AccountDisplay>> GetAccountDisplaysAsync()
         {
-            var accounts = await GetAccountsAsync();  // Fetch all accounts from the database
+            var accounts = App.AccountService.GetAccounts();
             var accountViews = await GetAccountsAccountViewsAsync();  // Fetch all account views from the database
             Accounts = accounts;
             AccountViews = accountViews;

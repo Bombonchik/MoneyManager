@@ -10,6 +10,11 @@ public partial class TransactionManagementView : ContentPage
 		InitializeComponent();
         NavigationPage.SetHasNavigationBar(this, false);
         BindingContext = new TransactionManagementViewModel();
+        //AccountsBorder.IsVisible = true;
 	}
 
+    private void Button_Clicked(object sender, EventArgs e)
+    {
+        AccountsBorder.IsVisible = !AccountsBorder.IsVisible;
+    }
 }

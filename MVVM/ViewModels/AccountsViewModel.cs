@@ -18,6 +18,7 @@ using System.Linq;
 using System.Security.Principal;
 using System.Text;
 using System.Threading.Tasks;
+using System.Transactions;
 using System.Windows.Input;
 
 namespace MoneyManager.MVVM.ViewModels
@@ -53,7 +54,10 @@ namespace MoneyManager.MVVM.ViewModels
         public AccountsViewModel() 
         {
             _ = InitializeAsync();
+            Messenger.Register<TransactionAddedMessage>(this, OnTransactionAdded);
+            Messenger.Register<TransactionUpdatedMessage>(this, OnTransactionUpdated);
         }
+
         private async Task InitializeAsync(int accountsToGenerateCount = 0)
         {
             await ProcessAccounts();
@@ -95,6 +99,52 @@ namespace MoneyManager.MVVM.ViewModels
                 balance += accountDisplay.Account.Balance;
             }
             return balance;
+        }
+        private void OnTransactionAdded(object recipient, TransactionAddedMessage message)
+        {
+            _ = HandleTransactionAddedAsync(recipient, message);
+        }
+        private void OnTransactionUpdated(object recipient, TransactionUpdatedMessage message)
+        {
+            _ = HandleTransactionUpdatedAsync(recipient, message);
+        }
+        private async Task HandleTransactionAddedAsync(object recipient, TransactionAddedMessage message)
+        {
+            if (message.Sender == this) return;
+            var transaction = message.NewTransation;
+            var sourceAccount = AccountLookup[transaction.SourceAccountId];
+            if (transaction.Type == TransactionType.Expense || transaction.Type == TransactionType.Income)
+            {
+                if (transaction.Type == TransactionType.Income)
+                {
+                    CachedAccountsData.MonthIncome += transaction.Amount;
+                    sourceAccount.Balance += transaction.Amount;
+                    await ChangeTotalBalanceAsync(transaction.Amount);
+                }
+                else
+                {
+                    CachedAccountsData.MonthExpenses += transaction.Amount;
+                    sourceAccount.Balance -= transaction.Amount;
+                    await ChangeTotalBalanceAsync(-transaction.Amount);
+                }
+            }
+            else if (transaction.Type == TransactionType.Transfer)
+            {
+                var destinationAccount = AccountLookup[transaction.DestinationAccountId.Value];
+                sourceAccount.Balance -= transaction.Amount;
+                destinationAccount.Balance += transaction.Amount;
+                await UpdateAccountAsync(destinationAccount);
+            }
+            await UpdateAccountAsync(sourceAccount);
+        }
+        private async Task HandleTransactionUpdatedAsync(object recipient, TransactionUpdatedMessage message)
+        {
+            if (message.Sender == this) return;
+            var oldTransactionRevert = message.OldTransation;
+            oldTransactionRevert.Amount *= -1;
+            var updatedTransaction = message.UpdatedTransation;
+            await HandleTransactionAddedAsync(this, new TransactionAddedMessage(oldTransactionRevert, message.Sender));
+            await HandleTransactionAddedAsync(this, new TransactionAddedMessage(updatedTransaction, message.Sender));
         }
         private async Task ChangeTotalBalanceAsync(decimal totalBalanceChange)
         {

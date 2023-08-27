@@ -31,6 +31,19 @@ namespace MoneyManager.MVVM.Models
         public int? RecurringTransactionId { get; set; }
         [ForeignKey(typeof(Category))]
         public int? CategoryId { get; set; }
-
+        public Transaction Clone()
+        {
+            return new Transaction
+            {
+                Id = this.Id,
+                Note = this.Note,
+                Amount = this.Amount,
+                SourceAccountId = this.SourceAccountId,
+                Type = this.Type,
+                CategoryId = this.CategoryId,
+                DestinationAccountId = this.DestinationAccountId,
+                RecurringTransactionId = this.RecurringTransactionId,
+            };
+        }
     }
 }

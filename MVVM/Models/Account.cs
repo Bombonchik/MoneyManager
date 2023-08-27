@@ -26,5 +26,17 @@ namespace MoneyManager.MVVM.Models
         {
             return $"Account: Id: {Id}, Name: {Name}, Balance: {Balance:C}, Identifier: {Identifier}, Type: {Type}, AccountViewId: {AccountViewId}";
         }
+        public Account Clone()
+        {
+            return new Account
+            {
+                Id = this.Id,
+                Name = this.Name,
+                Balance = this.Balance,
+                Identifier = this.Identifier,
+                Type = this.Type,
+                AccountViewId = this.AccountViewId,
+            };
+        }
     }   
 }

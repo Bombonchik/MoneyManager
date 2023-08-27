@@ -62,8 +62,7 @@
                         Grid.Row="1" Margin="0,10,0,0"
                         ItemsSource="{Binding AccountDisplays}"
                         SelectionMode="Single"
-                        SelectedItem="{Binding SelectedAccountDisplay}"
-                        ItemsUpdatingScrollMode="KeepLastItemInView">
+                        SelectedItem="{Binding SelectedAccountDisplay}">
             <CollectionView.ItemsLayout>
                 <GridItemsLayout Orientation="Vertical"
                          Span="2" VerticalItemSpacing="10"/>

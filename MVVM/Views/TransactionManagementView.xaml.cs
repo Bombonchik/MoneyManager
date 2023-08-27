@@ -12,9 +12,9 @@ public partial class TransactionManagementView : ContentPage
         BindingContext = new TransactionManagementViewModel();
         //AccountsBorder.IsVisible = true;
 	}
-
-    private void Button_Clicked(object sender, EventArgs e)
+    protected override void OnAppearing()
     {
-        AccountsBorder.IsVisible = !AccountsBorder.IsVisible;
+        base.OnAppearing();
+        ViewModel.OnAppearing();
     }
 }

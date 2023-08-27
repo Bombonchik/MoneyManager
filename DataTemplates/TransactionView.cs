@@ -26,5 +26,12 @@ namespace MoneyManager.DataTemplates
                 return Colors.Transparent;
             }
         }
+        public TransactionView Clone()
+        {
+            return new TransactionView
+            {
+                IsSelected = this.IsSelected,
+            };
+        }
     }
 }

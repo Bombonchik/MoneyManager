@@ -19,6 +19,7 @@ namespace MoneyManager.MVVM.ViewModels
     [AddINotifyPropertyChangedInterface]
     public class TransactionsViewModel : BaseViewModel
     {
+        #region Properties
         public ObservableCollection<DayTransactionGroup> DayTransactionGroups { get; set; }
         private readonly IMessenger Messenger = WeakReferenceMessenger.Default;
         private Dictionary<int, Transaction> TransactionLookup { get; set; }
@@ -31,28 +32,24 @@ namespace MoneyManager.MVVM.ViewModels
         //TaskCompletionSource objects
         private TaskCompletionSource<bool> accountsReceivedTcs = new TaskCompletionSource<bool>();
         private TaskCompletionSource<bool> deletedAccountsReceivedTcs = new TaskCompletionSource<bool>();
+        #endregion
         public TransactionsViewModel() 
         {
             _ = InitializeAsync();
         }
-        private async Task InitializeAsync()
+        #region Commands
+        public ICommand OpenEditTransactionCommand =>
+            new Command<TransactionDisplay>(transactionDisplay =>
+            {
+                var x = transactionDisplay.Transaction;
+            });
+        #endregion
+        #region Event Handlers
+        private void OnAccountDeleted(object recipient, AccountDeletedMessage message)
         {
-
-            var stopwatch = new Stopwatch();
-            stopwatch.Start();
-            GetCategories();
-            Messenger.Register<AccountUpdatedMessage>(this, OnAccountUpdated);
-            Messenger.Register<AccountDeletedMessage>(this, OnAccountDeleted);
-            Messenger.Register<ResponseAccountsMessage>(this, HandleAccountResponse);
-            Messenger.Register<ResponseDeletedAccountsMessage>(this, HandleDeletedAccountResponse);
-            Messenger.Register<TransactionAddedMessage>(this, OnTransactionAdded);
-            Messenger.Send(new RequestAccountsMessage(this));
-            Messenger.Send(new RequestDeletedAccountsMessage(this));
-            await ProcessTransactions();
-            stopwatch.Stop();
-            TimeSpan elapsed = stopwatch.Elapsed;
-
-            Debug.WriteLine($"Execution time: {elapsed.TotalMilliseconds} ms");
+            if (message.Sender == this) return;
+            if (AccountNameExtractorLookup.ContainsKey(message.DeletedAccount.DeletedAccountId))
+                AccountNameExtractorLookup[message.DeletedAccount.DeletedAccountId].UpdateAccountName();
         }
 
         private void OnTransactionAdded(object recipient, TransactionAddedMessage message)
@@ -69,20 +66,6 @@ namespace MoneyManager.MVVM.ViewModels
             if (AccountNameExtractorLookup.ContainsKey(message.UpdatedAccount.Id))
                 AccountNameExtractorLookup[message.UpdatedAccount.Id].UpdateAccountName();
         }
-
-        public ICommand OpenEditTransactionCommand =>
-            new Command<TransactionDisplay>(transactionDisplay =>
-            {
-                var x = transactionDisplay.Transaction;
-            });
-
-        private void OnAccountDeleted(object recipient, AccountDeletedMessage message)
-        {
-            if (message.Sender == this) return;
-            if (AccountNameExtractorLookup.ContainsKey(message.DeletedAccount.DeletedAccountId))
-                AccountNameExtractorLookup[message.DeletedAccount.DeletedAccountId].UpdateAccountName();
-        }
-
         private void HandleAccountResponse(object recipient, ResponseAccountsMessage message)
         {
             if (message.Sender != this) return;
@@ -95,7 +78,8 @@ namespace MoneyManager.MVVM.ViewModels
             DeletedAccountLookup = message.DeletedAccounts;
             deletedAccountsReceivedTcs.SetResult(true);
         }
-
+        #endregion
+        #region Private Methods
         private async Task ProcessTransactions()
         {
             await Task.WhenAll(accountsReceivedTcs.Task, deletedAccountsReceivedTcs.Task);
@@ -103,6 +87,18 @@ namespace MoneyManager.MVVM.ViewModels
             TransactionLookup = new Dictionary<int, Transaction>();
             foreach (var transactionDisplay in TransactionDisplays)
                 TransactionLookup[transactionDisplay.Transaction.Id] = transactionDisplay.Transaction;
+        }
+        private async Task InitializeAsync()
+        {
+            GetCategories();
+            Messenger.Register<AccountUpdatedMessage>(this, OnAccountUpdated);
+            Messenger.Register<AccountDeletedMessage>(this, OnAccountDeleted);
+            Messenger.Register<ResponseAccountsMessage>(this, HandleAccountResponse);
+            Messenger.Register<ResponseDeletedAccountsMessage>(this, HandleDeletedAccountResponse);
+            Messenger.Register<TransactionAddedMessage>(this, OnTransactionAdded);
+            Messenger.Send(new RequestAccountsMessage(this));
+            Messenger.Send(new RequestDeletedAccountsMessage(this));
+            await ProcessTransactions();
         }
         private async Task<ObservableCollection<DayTransactionGroup>> GetDayTransactionGroupsAsync()
         {
@@ -237,5 +233,6 @@ namespace MoneyManager.MVVM.ViewModels
         {
             return await App.TransactionsRepo.GetItemsAsync();
         }
+        #endregion
     }
 }

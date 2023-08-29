@@ -27,7 +27,7 @@ namespace MoneyManager.MVVM.ViewModels
     public class AccountsViewModel : BaseViewModel
     {
         private readonly IMessenger Messenger = WeakReferenceMessenger.Default;
-
+        #region Properties
         public AccountDisplay CurrentAccountDisplay { get; set; } = new AccountDisplay();
         public ICommand AccountSelectedCommand { get; set; }
 
@@ -46,11 +46,11 @@ namespace MoneyManager.MVVM.ViewModels
         private Dictionary<int, Account> AccountLookup { get; set; }
         private Dictionary<int, DeletedAccount> DeletedAccountLookup { get; set; }
         public CachedAccountsData CachedAccountsData { get; set; }
-        private decimal CurrentTotalBalance { get; set; }
         public object SelectedItem { get; set; }
         private AccountDisplay selectedAccountDisplay = new AccountDisplay();
 
         public ObservableCollection<AccountDisplay> AccountDisplays { get; set; } = new ObservableCollection<AccountDisplay>();
+        #endregion
         public AccountsViewModel() 
         {
             _ = InitializeAsync();
@@ -71,6 +71,7 @@ namespace MoneyManager.MVVM.ViewModels
             Messenger.Register<TransactionUpdatedMessage>(this, OnTransactionUpdated);
         }
 
+        #region MessageHandlers
         private void HandleAccountsRequest(object recipient, RequestAccountsMessage message)
         {
             Messenger.Send(new ResponseAccountsMessage(AccountLookup, message.Sender));
@@ -79,6 +80,16 @@ namespace MoneyManager.MVVM.ViewModels
         {
             Messenger.Send(new ResponseDeletedAccountsMessage(DeletedAccountLookup, message.Sender));
         }
+        private void OnTransactionAdded(object recipient, TransactionAddedMessage message)
+        {
+            _ = HandleTransactionAddedAsync(recipient, message);
+        }
+        private void OnTransactionUpdated(object recipient, TransactionUpdatedMessage message)
+        {
+            _ = HandleTransactionUpdatedAsync(recipient, message);
+        }
+        #endregion
+        #region ProcessMethods
         private async Task ProcessAccounts()
         {
             AccountDisplays = await GetAccountDisplaysAsync();
@@ -93,24 +104,17 @@ namespace MoneyManager.MVVM.ViewModels
             foreach (var deletedAccount in deletedAccounts)
                 DeletedAccountLookup[deletedAccount.DeletedAccountId] = deletedAccount;
         }
-
         private decimal RecalculateTotalBalance()
         {
             decimal balance = 0;
-            foreach (var accountDisplay in AccountDisplays) 
-            { 
+            foreach (var accountDisplay in AccountDisplays)
+            {
                 balance += accountDisplay.Account.Balance;
             }
             return balance;
         }
-        private void OnTransactionAdded(object recipient, TransactionAddedMessage message)
-        {
-            _ = HandleTransactionAddedAsync(recipient, message);
-        }
-        private void OnTransactionUpdated(object recipient, TransactionUpdatedMessage message)
-        {
-            _ = HandleTransactionUpdatedAsync(recipient, message);
-        }
+        #endregion
+        #region TransactionHandlers
         private async Task HandleTransactionAddedAsync(object recipient, TransactionAddedMessage message)
         {
             if (message.Sender == this) return;
@@ -155,6 +159,8 @@ namespace MoneyManager.MVVM.ViewModels
             CachedAccountsData.TotalBalance += totalBalanceChange;
             await App.CachedAccountsDataRepo.SaveItemAsync(CachedAccountsData);
         }
+        #endregion
+        #region Commands
         public ICommand DeleteAccountCommand =>
             new Command(async () =>
             {
@@ -214,8 +220,7 @@ namespace MoneyManager.MVVM.ViewModels
                 };
                 await Shell.Current.Navigation.PushAsync(accountManagmentPage);
             });
-
-
+        #endregion
         #region DatabaseInteraction
         private async Task SaveAccountAsync(Account account)
         {

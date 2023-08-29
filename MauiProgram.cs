@@ -37,8 +37,6 @@ public static class MauiProgram
         builder.Services.AddSingleton<ColorService>();
 
 
-
-        //RoundedSwipeItem.Handle();
 #if DEBUG
         builder.Logging.AddDebug();
 #endif

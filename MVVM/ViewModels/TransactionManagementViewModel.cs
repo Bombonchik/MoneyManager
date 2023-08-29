@@ -15,7 +15,7 @@ namespace MoneyManager.MVVM.ViewModels
     [AddINotifyPropertyChangedInterface]
     public class TransactionManagementViewModel : BaseViewModel
     {
-
+        #region Properties
         private Account currentAccount = null;
         private TransactionTypeView selectedTransactionType;
         private bool IsTransactionCreating { get; set; }
@@ -30,6 +30,8 @@ namespace MoneyManager.MVVM.ViewModels
         public TimeSpan SelectedTime { get; set; }
         private Dictionary<int, Account> AccountLookup { get; set; }
         public ObservableCollection<Account> Accounts { get; set; }
+        public ObservableCollection<TransactionTypeView> TransactionTypes { get; set; }
+        public bool IsTransfer { get; set; }
         public Account CurrentAccount
         {
             get { return currentAccount; }
@@ -62,6 +64,21 @@ namespace MoneyManager.MVVM.ViewModels
                     if (SelectedDestinationAccount is not null && SelectedTransactionType is not null)
                         IsAccountsCollectionViewVisible = false;
                     return;
+                }
+            }
+        }
+        public TransactionTypeView SelectedTransactionType
+        {
+            get => selectedTransactionType;
+            set
+            {
+                if (value is null) return;
+                if (selectedTransactionType != value)
+                {
+                    OnNewItemSelected(selectedTransactionType, value);
+                    selectedTransactionType = value;
+                    IsTransfer = selectedTransactionType.Type == TransactionType.Transfer;
+                    UpdateUIForTransactionType(selectedTransactionType.Type);
                 }
             }
         }
@@ -121,17 +138,13 @@ namespace MoneyManager.MVVM.ViewModels
                 return string.Empty;
             }
         }
+        #endregion
+        #region Commands
         public ICommand SelectCategoryCommand =>
             new Command(() =>
             {
                 SelectCategory();
             });
-        private void SelectCategory()
-        {
-
-            IsAccountsCollectionViewVisible = false;
-            IsCategoriesCollectionViewVisible = true;
-        }
         public ICommand SelectSourceAccountCommand =>
             new Command(() =>
             {
@@ -147,20 +160,42 @@ namespace MoneyManager.MVVM.ViewModels
                 IsSelectingSourceAccount = false;
                 IsSelectingDestinationAccount = true;
             });
-        public TransactionTypeView SelectedTransactionType
-        {
-            get => selectedTransactionType;
-            set
+        public ICommand SaveTransactionCommand =>
+            new Command(async () =>
             {
-                if (value is null) return;
-                if (selectedTransactionType != value)
+                if (SelectedSourceAccount is null || NewTransactionDisplay.Transaction.Amount < 0
+                || (CurrentCategory is null && (SelectedTransactionType.Type == TransactionType.Income || SelectedTransactionType.Type == TransactionType.Expense))
+                || (SelectedDestinationAccount is null && SelectedTransactionType.Type == TransactionType.Transfer)
+                || !AccountLookup.ContainsKey(SelectedSourceAccount.Id)
+                || (SelectedDestinationAccount is not null && !AccountLookup.ContainsKey(SelectedDestinationAccount.Id)))
                 {
-                    OnNewItemSelected(selectedTransactionType, value);
-                    selectedTransactionType = value;
-                    IsTransfer = selectedTransactionType.Type == TransactionType.Transfer;
-                    UpdateUIForTransactionType(selectedTransactionType.Type);
+                    await Application.Current.MainPage.DisplayAlert($"Unable to {(IsEditMode ? "save" : "create")} a transaction",
+                            "Select account(s) and enter a nonnegative amount", "OK");
+                    return;
                 }
-            }
+                if ((SelectedTransactionType.Type == TransactionType.Expense || SelectedTransactionType.Type == TransactionType.Transfer)
+                && SelectedSourceAccount.Balance < NewTransactionDisplay.Transaction.Amount)
+                {
+                    await Application.Current.MainPage.DisplayAlert($"Unable to {(IsEditMode ? "save" : "create")} a transaction",
+                             $"{(SelectedTransactionType.Type == TransactionType.Expense ? "Expense" : "Transfer")} amount is less than the balance of {SelectedSourceAccount.Name}", "OK");
+                    return;
+                }
+                FillInTransactionData();
+                await ProcessTransaction();
+                ClosePage();
+            });
+        public ICommand CancelTransactionCommand =>
+            new Command(() =>
+            {
+                ClosePage();
+            });
+        #endregion
+        #region Methods
+        private void SelectCategory()
+        {
+
+            IsAccountsCollectionViewVisible = false;
+            IsCategoriesCollectionViewVisible = true;
         }
         private void UpdateUIForTransactionType(TransactionType type)
         {
@@ -198,8 +233,6 @@ namespace MoneyManager.MVVM.ViewModels
                 return;
             }
         }
-        public ObservableCollection<TransactionTypeView> TransactionTypes { get; set; }
-        public bool IsTransfer { get; set; }
 
         private void ClosePage()
         {
@@ -207,35 +240,7 @@ namespace MoneyManager.MVVM.ViewModels
             ResetPageData();
             IsTransactionCreating = false;
         }
-        public ICommand SaveTransactionCommand =>
-            new Command(async () =>
-            {
-                if (SelectedSourceAccount is null || NewTransactionDisplay.Transaction.Amount < 0
-                || (CurrentCategory is null && (SelectedTransactionType.Type == TransactionType.Income || SelectedTransactionType.Type == TransactionType.Expense))
-                || (SelectedDestinationAccount is null && SelectedTransactionType.Type == TransactionType.Transfer) 
-                || !AccountLookup.ContainsKey(SelectedSourceAccount.Id)
-                || (SelectedDestinationAccount is not null && !AccountLookup.ContainsKey(SelectedDestinationAccount.Id)))
-                {
-                    await Application.Current.MainPage.DisplayAlert($"Unable to {(IsEditMode ? "save" : "create")} a transaction",
-                            "Select account(s) and enter a nonnegative amount", "OK");
-                    return;
-                }
-                if ((SelectedTransactionType.Type == TransactionType.Expense || SelectedTransactionType.Type == TransactionType.Transfer) 
-                && SelectedSourceAccount.Balance < NewTransactionDisplay.Transaction.Amount) 
-                {
-                    await Application.Current.MainPage.DisplayAlert($"Unable to {(IsEditMode ? "save" : "create")} a transaction",
-                             $"{(SelectedTransactionType.Type == TransactionType.Expense ? "Expense" : "Transfer")} amount is less than the balance of {SelectedSourceAccount.Name}", "OK");
-                    return;
-                }
-                FillInTransactionData();
-                await ProcessTransaction();
-                ClosePage();
-            });
-        public ICommand CancelTransactionCommand =>
-            new Command(() =>
-            {
-                ClosePage();
-            });
+        
         private async Task ProcessTransaction()
         {
             if (IsEditMode)
@@ -267,12 +272,29 @@ namespace MoneyManager.MVVM.ViewModels
                 NewTransactionDisplay.Transaction.DestinationAccountId = SelectedDestinationAccount.Id;
 
         }
+        private void ResetPageData()
+        {
+            SelectedSourceAccount = null;
+            SelectedDestinationAccount = null;
+            NewTransactionDisplay = null;
+            OldTransactionDisplay = null;
+            SelectedIncomeCategory = null;
+            SelectedExpenseCategory = null;
+            IsSelectingSourceAccount = false;
+            IsSelectingDestinationAccount = false;
+        }
+        private void GetCategories()
+        {
+            IncomeCategories = CategoryConstants.IncomeCategories;
+            ExpenseCategories = CategoryConstants.ExpenseCategories;
+        }
+        #endregion
         public TransactionManagementViewModel(TransactionDisplay existingTransactionDisplay = null)
         {
             Accounts = new();
             TransactionTypes = new();
             foreach (TransactionType transactionType in Enum.GetValues(typeof(TransactionType)))
-                TransactionTypes.Add(new TransactionTypeView { Type = transactionType, IsSelected = false  });
+                TransactionTypes.Add(new TransactionTypeView { Type = transactionType, IsSelected = false });
             GetCategories();
             Messenger.Register<AccountAddedMessage>(this, OnAccountAdded);
             Messenger.Register<AccountDeletedMessage>(this, OnAccountDeleted);
@@ -282,19 +304,7 @@ namespace MoneyManager.MVVM.ViewModels
             IsAccountsCollectionViewVisible = true;
             IsCategoriesCollectionViewVisible = true;
         }
-
-        public void InitializeTransaction(TransactionDisplay existingTransactionDisplay = null)
-        {
-            IsTransactionCreating = true;
-            if (existingTransactionDisplay is not null)
-                InitializeEditMode(existingTransactionDisplay);
-            else
-                InitializeNormalMode();
-            IsAccountsCollectionViewVisible = true;
-            IsCategoriesCollectionViewVisible = false;
-            IsSelectingSourceAccount = true;
-        }
-
+        #region Event Handlers
         private void OnAccountDeleted(object recipient, AccountDeletedMessage message)
         {
             if (message.Sender == this) return;
@@ -313,18 +323,20 @@ namespace MoneyManager.MVVM.ViewModels
             if (message.Sender == this) return;
             Accounts.Add(AccountLookup[message.NewAccount.Id]);
         }
-        private void ResetPageData()
-        {
-            SelectedSourceAccount = null;
-            SelectedDestinationAccount = null;
-            NewTransactionDisplay = null;
-            OldTransactionDisplay = null;
-            SelectedIncomeCategory = null;
-            SelectedExpenseCategory = null;
-            IsSelectingSourceAccount = false;
-            IsSelectingDestinationAccount  = false;
-        }
+        #endregion
 
+        #region Initializing
+        public void InitializeTransaction(TransactionDisplay existingTransactionDisplay = null)
+        {
+            IsTransactionCreating = true;
+            if (existingTransactionDisplay is not null)
+                InitializeEditMode(existingTransactionDisplay);
+            else
+                InitializeNormalMode();
+            IsAccountsCollectionViewVisible = true;
+            IsCategoriesCollectionViewVisible = false;
+            IsSelectingSourceAccount = true;
+        }
         private void InitializeEditMode(TransactionDisplay existingTransactionDisplay)
         {
             IsEditMode = true;
@@ -364,12 +376,7 @@ namespace MoneyManager.MVVM.ViewModels
                 InitializeTransaction();
             }
         }
+        #endregion
 
-
-        private void GetCategories()
-        {
-            IncomeCategories = CategoryConstants.IncomeCategories;
-            ExpenseCategories = CategoryConstants.ExpenseCategories;
-        }
     }
 }

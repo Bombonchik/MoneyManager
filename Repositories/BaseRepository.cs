@@ -1,5 +1,4 @@
 ﻿
-
 using MoneyManager.Abstractions;
 using SQLite;
 using SQLiteNetExtensionsAsync.Extensions;

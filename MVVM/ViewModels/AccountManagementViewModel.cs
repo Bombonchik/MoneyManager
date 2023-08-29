@@ -17,10 +17,13 @@ namespace MoneyManager.MVVM.ViewModels
     [AddINotifyPropertyChangedInterface]
     public class AccountManagementViewModel : BaseViewModel
     {
+        #region Properties
         private GlyphView selectedIcon;
         public bool IsEditMode { get; private set; }
+        // Represents the account being created or edited
         public AccountDisplay NewAccountDisplay { get; set; }
         public string ViewHeader { get; set; }
+        // Text for the operation button (either "Save" or "Add")
         public string OperationName { get; set; }
         public List<string> AccountTypes { get; set; } = new List<string>
         {
@@ -56,6 +59,8 @@ namespace MoneyManager.MVVM.ViewModels
         }
         public Action<AccountDisplay> AccountSavedCallback { get; set; }
         public Action OperationCanceledCallback { get; set; }
+        #endregion
+        #region Commands
         public ICommand SaveAccountCommand =>
             new Command(async () =>
             {
@@ -77,6 +82,34 @@ namespace MoneyManager.MVVM.ViewModels
                 Debug.WriteLine($"Save: {NewAccountDisplay.AccountView}");
                 ClosePage(NewAccountDisplay);
             });
+        public ICommand CancelCommand =>
+            new Command( () => {
+                ClosePage();
+            });
+        #endregion
+        public AccountManagementViewModel(AccountDisplay existingAccount = null)
+        {
+            var iconGlyphs = DisplayConstants.IconGlyphs;
+            IconGlyphs = new();
+            foreach (var iconGlyph in iconGlyphs)
+            {
+                IconGlyphs.Add(new GlyphView { Glyph = iconGlyph, IsSelected = false });
+            }
+            if (existingAccount is not null)
+                InitializeEditMode(existingAccount);
+            else
+                InitializeNormalMode();
+        }
+        #region Private Methods
+        private void ClosePage(AccountDisplay newAccountDisplay = null)
+        {
+            if (newAccountDisplay is not null)
+                AccountSavedCallback?.Invoke(newAccountDisplay);
+            else
+                OperationCanceledCallback?.Invoke();
+            Shell.Current.Navigation.PopAsync();
+        }
+        // Helper method to process saving in normal (non-edit) mode
         private async Task ProcessSavingInNormalMode()
         {
             var AccountWithHighestId = await App.AccountsRepo.GetHighestItemByPropertyAsync("Id");
@@ -98,33 +131,6 @@ namespace MoneyManager.MVVM.ViewModels
             Debug.WriteLine($"nextAccountId: {nextAccountId}");
             NewAccountDisplay.AccountView.BackgroundColor = App.ColorService.GetColorFromGradient(DisplayConstants.AccountBackgroundColorRange).ToHex();
         }
-        public ICommand CancelCommand =>
-            new Command( () => {
-                ClosePage();
-            });
-        private void ClosePage(AccountDisplay newAccountDisplay = null)
-        {
-            if (newAccountDisplay is not null)
-                AccountSavedCallback?.Invoke(newAccountDisplay);
-            else
-                OperationCanceledCallback?.Invoke();
-            Shell.Current.Navigation.PopAsync();
-        }
-
-
-        public AccountManagementViewModel(AccountDisplay existingAccount = null)
-        {
-            var iconGlyphs = DisplayConstants.IconGlyphs;
-            IconGlyphs = new();
-            foreach (var iconGlyph in iconGlyphs)
-            {
-                IconGlyphs.Add(new GlyphView { Glyph = iconGlyph, IsSelected = false });
-            }
-            if (existingAccount is not null)
-                InitializeEditMode(existingAccount);
-            else
-                InitializeNormalMode();
-        }
         private void InitializeEditMode(AccountDisplay existingAccount)
         {
             IsEditMode = true;
@@ -144,7 +150,8 @@ namespace MoneyManager.MVVM.ViewModels
             ViewHeader = "Fill in your account details";
             OperationName = "Add";
         }
+        #endregion
     }
-    
+
 }
 

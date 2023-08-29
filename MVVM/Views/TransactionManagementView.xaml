@@ -131,7 +131,8 @@
                                     StyleClass="WhiteTextLabel, CenterLabel"
                                     FontFamily="Strong"
                                     FontSize="18"
-                                    Margin="5,0,5,0"/>
+                                    Margin="5,0,5,0"
+                                    WidthRequest="160"/>
                             </Border>
                         </DataTemplate>
                     </CollectionView.ItemTemplate>

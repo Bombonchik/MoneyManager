@@ -54,8 +54,6 @@ namespace MoneyManager.MVVM.ViewModels
         public AccountsViewModel() 
         {
             _ = InitializeAsync();
-            Messenger.Register<TransactionAddedMessage>(this, OnTransactionAdded);
-            Messenger.Register<TransactionUpdatedMessage>(this, OnTransactionUpdated);
         }
 
         private async Task InitializeAsync(int accountsToGenerateCount = 0)
@@ -67,15 +65,20 @@ namespace MoneyManager.MVVM.ViewModels
             Debug.WriteLine(AccountDisplays.MyToString());
             CachedAccountsData = await App.CachedAccountsDataService.GetSafelyLastCashedAccountsDataAsync(RecalculateTotalBalance);
             Debug.WriteLine(CachedAccountsData.ToString());
-            Messenger.Register<RequestAccountsMessage>(this, HandleAccountRequest);
-        
+            Messenger.Register<RequestAccountsMessage>(this, HandleAccountsRequest); 
+            Messenger.Register<RequestDeletedAccountsMessage>(this, HandleDeletedAccountsRequest);
+            Messenger.Register<TransactionAddedMessage>(this, OnTransactionAdded);
+            Messenger.Register<TransactionUpdatedMessage>(this, OnTransactionUpdated);
         }
 
-        private void HandleAccountRequest(object recipient, RequestAccountsMessage message)
+        private void HandleAccountsRequest(object recipient, RequestAccountsMessage message)
         {
             Messenger.Send(new ResponseAccountsMessage(AccountLookup, message.Sender));
         }
-
+        private void HandleDeletedAccountsRequest(object recipient, RequestDeletedAccountsMessage message)
+        {
+            Messenger.Send(new ResponseDeletedAccountsMessage(DeletedAccountLookup, message.Sender));
+        }
         private async Task ProcessAccounts()
         {
             AccountDisplays = await GetAccountDisplaysAsync();
@@ -205,6 +208,7 @@ namespace MoneyManager.MVVM.ViewModels
                 viewModel.AccountSavedCallback = async (newAccountDisplay) =>
                 {
                     await UpdateAccountAsync(newAccountDisplay.Account);
+                    await SaveAccountViewAsync(newAccountDisplay.AccountView);
                     await ChangeTotalBalanceAsync(newAccountDisplay.Account.Balance - currentSelectedAccountBalance);
                     SelectedAccountDisplay = new AccountDisplay { Account = newAccountDisplay.Account, AccountView = newAccountDisplay.AccountView };
                 };
@@ -236,7 +240,7 @@ namespace MoneyManager.MVVM.ViewModels
             await App.DeletedAccountRepo.SaveItemAsync(deletedAccount);
             DeletedAccountLookup.Add(deletedAccount.DeletedAccountId, deletedAccount);
             AccountLookup.Remove(deletedAccount.DeletedAccountId);
-            Messenger.Send(new AccountDeletedMessage(account, this));
+            Messenger.Send(new AccountDeletedMessage(account, deletedAccount, this));
         }
         public async Task<List<Account>> GetAccountsAsync()
         {

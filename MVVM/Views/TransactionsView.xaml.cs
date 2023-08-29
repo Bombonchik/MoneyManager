@@ -1,3 +1,5 @@
+using MoneyManager.MVVM.ViewModels;
+
 namespace MoneyManager.MVVM.Views;
 
 public partial class TransactionsView : ContentPage
@@ -6,5 +8,6 @@ public partial class TransactionsView : ContentPage
     {
         InitializeComponent();
         NavigationPage.SetHasNavigationBar(this, false);
+        BindingContext = new TransactionsViewModel();
     }
 }

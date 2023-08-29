@@ -2,11 +2,95 @@
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="MoneyManager.MVVM.Views.TransactionsView"
-             Title="TransactionsView">
-    <VerticalStackLayout>
-        <Label 
-            Text="Welcome to .NET MAUI!"
-            VerticalOptions="Center" 
-            HorizontalOptions="Center" />
-    </VerticalStackLayout>
+             xmlns:local="clr-namespace:MoneyManager.MVVM.ViewModels"
+             xmlns:converters="clr-namespace:MoneyManager.Converters"
+             BackgroundColor="{AppThemeBinding Light={StaticResource LightPrimaryBackground}, Dark={StaticResource DarkPrimaryBackground}}">
+
+    <ContentPage.Resources>
+        <converters:TransactionTypeToColorConverter x:Key="TransactionTypeToColor"/>
+        <converters:CategoryNameExtractorConverter x:Key="CategoryNameExtractorConverter"/>
+        <converters:AccountNameExtractorsConverter x:Key="AccountNameExtractorsConverter"/>
+    </ContentPage.Resources>
+    
+    <Grid x:Name="RootLayout" Padding="7, 14, 10, 0" HorizontalOptions="Center">
+        <CollectionView ItemsSource="{Binding DayTransactionGroups}">
+            <CollectionView.ItemsLayout>
+                <LinearItemsLayout Orientation="Vertical" ItemSpacing="10"/>
+            </CollectionView.ItemsLayout>
+
+            <CollectionView.ItemTemplate>
+                <DataTemplate>
+                    <!-- BInd stroke -->
+                    <Grid Padding="3">
+                        <Border 
+                            StyleClass="DataBorder25ShadowBlackWhite"
+                            Padding="10">
+
+                            <Grid
+                                RowDefinitions="auto, *">
+
+                                <Label 
+                                    Text="{Binding Date.Date, StringFormat='{0:ddd dd.MM.yyyy}'}" 
+                                    StyleClass="WhiteTextLabel"  
+                                    Margin="6,0,0,0"
+                                    VerticalOptions="Center"
+                                    FontFamily="Strong"
+                                    FontSize="18"/>
+                                <CollectionView
+                                Grid.Row="1"
+                                ItemsSource="{Binding DayTransactions}"
+                                SelectionMode="Single">
+                                    <CollectionView.ItemsLayout>
+                                        <LinearItemsLayout Orientation="Vertical" ItemSpacing="4"/>
+                                    </CollectionView.ItemsLayout>
+                                    <CollectionView.ItemTemplate>
+                                        <DataTemplate>
+                                            <Border
+                                                StyleClass="DataBorder15ShadowBlackWhite"
+                                                BackgroundColor="#4D4DB0"
+                                                Padding="4,8,4,8"
+                                                >
+                                                <Border.GestureRecognizers>
+                                                    <TapGestureRecognizer Command="{Binding Path=BindingContext.OpenEditTransactionCommand, Source={x:Reference RootLayout}}"
+                                                                          CommandParameter="{Binding .}"/>
+                                                </Border.GestureRecognizers>
+                                                <Grid ColumnDefinitions=".28*, .46*, .26*" WidthRequest="330">
+                                                    <Label 
+                                                        Text="{Binding TransactionView.CategoryNameExtractor, Converter={StaticResource CategoryNameExtractorConverter}}" 
+                                                        StyleClass="WhiteTextLabel" 
+                                                        FontAttributes="Bold" 
+                                                        VerticalOptions="Center" />
+                                                    <VerticalStackLayout Grid.Column="1" VerticalOptions="Center">
+                                                        <Label Text="{Binding Transaction.Note}" 
+                                                               StyleClass="WhiteTextLabel" 
+                                                               FontAttributes="Bold"  
+                                                               FontSize="11.5" 
+                                                               VerticalOptions="Center" 
+                                                               LineBreakMode="NoWrap"/>
+                                                        <Label Text="{Binding TransactionView, Converter={StaticResource AccountNameExtractorsConverter}}"
+                                                               StyleClass="WhiteTextLabel"  
+                                                               FontFamily="Strong" 
+                                                               FontSize="12" 
+                                                               VerticalOptions="Center"/>
+                                                    </VerticalStackLayout>
+                                                    <Label 
+                                                        Grid.Column="2" 
+                                                        Text="{Binding Transaction.Amount, StringFormat='{0:C}'}" 
+                                                        StyleClass="WhiteTextLabel" 
+                                                        TextColor="{Binding Transaction.Type, Converter={StaticResource TransactionTypeToColor}}" 
+                                                        FontAttributes="Bold" VerticalOptions="Center" HorizontalOptions="Center"/>
+                                                </Grid>
+                                            </Border>
+                                        </DataTemplate>
+                                    </CollectionView.ItemTemplate>
+                                </CollectionView>
+
+                            </Grid>
+                        </Border>
+                    </Grid>
+                </DataTemplate>
+            </CollectionView.ItemTemplate>
+        </CollectionView>
+    </Grid>
+        
 </ContentPage>

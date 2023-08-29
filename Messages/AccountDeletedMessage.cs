@@ -9,11 +9,13 @@ namespace MoneyManager.Messages
 {
     public class AccountDeletedMessage
     {
-        public Account DeletedAccount { get; }
+        public Account Account { get; }
+        public DeletedAccount DeletedAccount { get; }
         public object Sender { get; }
 
-        public AccountDeletedMessage(Account deletedAccount, object sender)
+        public AccountDeletedMessage(Account account, DeletedAccount deletedAccount, object sender)
         {
+            Account = account;
             DeletedAccount = deletedAccount;
             Sender = sender;
         }

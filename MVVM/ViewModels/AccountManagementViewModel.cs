@@ -69,6 +69,7 @@ namespace MoneyManager.MVVM.ViewModels
                     return;
                 }
                 NewAccountDisplay.Account.Type = SelectedAccountType;
+                Debug.WriteLine(NewAccountDisplay.AccountView.Icon == selectedIcon.Glyph); 
                 NewAccountDisplay.AccountView.Icon = selectedIcon.Glyph;
                 if (!IsEditMode)
                     await ProcessSavingInNormalMode();

@@ -4,7 +4,7 @@
              x:Class="MoneyManager.MVVM.Views.AccountsView"
              xmlns:local="clr-namespace:MoneyManager.MVVM.ViewModels"
              xmlns:converters="clr-namespace:MoneyManager.Converters"
-             BackgroundColor="{AppThemeBinding Light={StaticResource LightPrimaryBackground}, Dark={StaticResource DarkPrimaryBackground}}" >
+             BackgroundColor="{AppThemeBinding Light={StaticResource LightPrimaryBackground}, Dark={StaticResource DarkPrimaryBackground}}">
     <ContentPage.Resources>
         <converters:ColorConvertor x:Key="ColorConverter"/>
         <converters:TextToCurrency x:Key="TextToCurrency"/>

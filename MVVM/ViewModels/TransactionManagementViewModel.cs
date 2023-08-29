@@ -1,6 +1,7 @@
 ﻿using CommunityToolkit.Mvvm.Messaging;
 using Microsoft.Maui.Controls;
 using MoneyManager.Abstractions;
+using MoneyManager.Constants;
 using MoneyManager.DataTemplates;
 using MoneyManager.Messages;
 using MoneyManager.MVVM.Models;
@@ -14,8 +15,9 @@ namespace MoneyManager.MVVM.ViewModels
     [AddINotifyPropertyChangedInterface]
     public class TransactionManagementViewModel : BaseViewModel
     {
+
+        private Account currentAccount = null;
         private TransactionTypeView selectedTransactionType;
-        //private ObservableCollection<Category> currentCategories;
         private bool IsTransactionCreating { get; set; }
         public bool IsEditMode { get; private set; }
         private readonly IMessenger Messenger = WeakReferenceMessenger.Default;
@@ -30,6 +32,7 @@ namespace MoneyManager.MVVM.ViewModels
         public ObservableCollection<Account> Accounts { get; set; }
         public Account CurrentAccount
         {
+            get { return currentAccount; }
             set
             {
                 if (IsSelectingSourceAccount)
@@ -270,7 +273,7 @@ namespace MoneyManager.MVVM.ViewModels
             TransactionTypes = new();
             foreach (TransactionType transactionType in Enum.GetValues(typeof(TransactionType)))
                 TransactionTypes.Add(new TransactionTypeView { Type = transactionType, IsSelected = false  });
-            FillCategories();
+            GetCategories();
             Messenger.Register<AccountAddedMessage>(this, OnAccountAdded);
             Messenger.Register<AccountDeletedMessage>(this, OnAccountDeleted);
             Messenger.Register<ResponseAccountsMessage>(this, HandleAccountResponse);
@@ -295,7 +298,7 @@ namespace MoneyManager.MVVM.ViewModels
         private void OnAccountDeleted(object recipient, AccountDeletedMessage message)
         {
             if (message.Sender == this) return;
-            Accounts.Remove(message.DeletedAccount);
+            Accounts.Remove(message.Account);
         }
 
         private void HandleAccountResponse(object recipient, ResponseAccountsMessage message)
@@ -363,243 +366,10 @@ namespace MoneyManager.MVVM.ViewModels
         }
 
 
-        private void FillCategories()
+        private void GetCategories()
         {
-            IncomeCategories = new ObservableCollection<Category>
-            {
-                // Income Categories
-                new Category
-                {
-                    Id = 1,
-                    Name = "Salary",
-                    CategoryType = TransactionType.Income
-                },
-                new Category
-                {
-                    Id = 2,
-                    Name = "Business",
-                    CategoryType = TransactionType.Income
-                },
-                new Category
-                {
-                    Id = 3,
-                    Name = "Investments",
-                    CategoryType = TransactionType.Income
-                },
-                new Category
-                {
-                    Id = 4,
-                    Name = "Rental",
-                    CategoryType = TransactionType.Income
-                },
-                new Category
-                {
-                    Id = 5,
-                    Name = "Dividends",
-                    CategoryType = TransactionType.Income
-                },
-                new Category
-                {
-                    Id = 6,
-                    Name = "Pension",
-                    CategoryType = TransactionType.Income
-                },
-                new Category
-                {
-                    Id = 7,
-                    Name = "Interest",
-                    CategoryType = TransactionType.Income
-                },
-                new Category
-                {
-                    Id = 8,
-                    Name = "Freelance",
-                    CategoryType = TransactionType.Income
-                },
-                new Category
-                {
-                    Id = 9,
-                    Name = "Sale of Assets",
-                    CategoryType = TransactionType.Income
-                },
-                new Category
-                {
-                    Id = 10,
-                    Name = "Social Security",
-                    CategoryType = TransactionType.Income
-                },
-                new Category
-                {
-                    Id = 11,
-                    Name = "Grant",
-                    CategoryType = TransactionType.Income
-                },
-                new Category
-                {
-                    Id = 12,
-                    Name = "Lottery",
-                    CategoryType = TransactionType.Income
-                },
-                new Category
-                {
-                    Id = 13,
-                    Name = "Tax Refund",
-                    CategoryType = TransactionType.Income
-                },
-                new Category
-                {
-                    Id = 14,
-                    Name = "Royalties",
-                    CategoryType = TransactionType.Income
-                },
-                new Category
-                {
-                    Id = 15,
-                    Name = "Other",
-                    CategoryType = TransactionType.Income
-                }
-            };
-            ExpenseCategories = new ObservableCollection<Category>
-            {
-                new Category
-                {
-                    Id = 16,
-                    Name = "Food",
-                    CategoryType = TransactionType.Expense
-                },
-                new Category
-                {
-                    Id = 17,
-                    Name = "Housing",
-                    CategoryType = TransactionType.Expense
-                },
-                new Category
-                {
-                    Id = 18,
-                    Name = "Transportation",
-                    CategoryType = TransactionType.Expense
-                },
-                new Category
-                {
-                    Id = 19,
-                    Name = "Eating Out",
-                    CategoryType = TransactionType.Expense
-                },
-                new Category
-                {
-                    Id = 20,
-                    Name = "Health",
-                    CategoryType = TransactionType.Expense
-                },
-                new Category
-                {
-                    Id = 21,
-                    Name = "Entertainment",
-                    CategoryType = TransactionType.Expense
-                },
-                new Category
-                {
-                    Id = 22,
-                    Name = "Sports",
-                    CategoryType = TransactionType.Expense
-                },
-                new Category
-                {
-                    Id = 23,
-                    Name = "Shopping",
-                    CategoryType = TransactionType.Expense
-                },
-                new Category
-                {
-                    Id = 24,
-                    Name = "Education",
-                    CategoryType = TransactionType.Expense
-                },
-                new Category
-                {
-                    Id = 25,
-                    Name = "Savings",
-                    CategoryType = TransactionType.Expense
-                },
-                new Category
-                {
-                    Id = 26,
-                    Name = "Investments",
-                    CategoryType = TransactionType.Expense
-                },
-                new Category
-                {
-                    Id = 27,
-                    Name = "Family",
-                    CategoryType = TransactionType.Expense
-                },
-                new Category
-                {
-                    Id = 28,
-                    Name = "Travel",
-                    CategoryType = TransactionType.Expense
-                },
-                new Category
-                {
-                    Id = 29,
-                    Name = "Pets",
-                    CategoryType = TransactionType.Expense
-                },
-                new Category
-                {
-                    Id = 30,
-                    Name = "Subscriptions",
-                    CategoryType = TransactionType.Expense
-                },
-                new Category
-                {
-                    Id = 31,
-                    Name = "Insurance",
-                    CategoryType = TransactionType.Expense
-                },
-                new Category
-                {
-                    Id = 32,
-                    Name = "Personal Care",
-                    CategoryType = TransactionType.Expense
-                },
-                new Category
-                {
-                    Id = 33,
-                    Name = "Debt Payments",
-                    CategoryType = TransactionType.Expense
-                },
-                new Category
-                {
-                    Id = 34,
-                    Name = "Communications",
-                    CategoryType = TransactionType.Expense
-                },
-                new Category
-                {
-                    Id = 35,
-                    Name = "Gifts",
-                    CategoryType = TransactionType.Expense
-                },
-                new Category
-                {
-                    Id = 36,
-                    Name = "Taxes",
-                    CategoryType = TransactionType.Expense
-                },
-                new Category
-                {
-                    Id = 37,
-                    Name = "Charity",
-                    CategoryType = TransactionType.Expense
-                },
-                new Category
-                {
-                    Id = 38,
-                    Name = "Other",
-                    CategoryType = TransactionType.Expense
-                }
-            };
+            IncomeCategories = CategoryConstants.IncomeCategories;
+            ExpenseCategories = CategoryConstants.ExpenseCategories;
         }
     }
 }

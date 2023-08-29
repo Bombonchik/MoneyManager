@@ -2,7 +2,9 @@
 using PropertyChanged;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -26,11 +28,16 @@ namespace MoneyManager.DataTemplates
                 return Colors.Transparent;
             }
         }
+        public AccountNameExtractor SourceAccountNameExtractor { get; set; }
+        public AccountNameExtractor DestinationAccountNameExtractor { get; set; }
+        public CategoryNameExtractor CategoryNameExtractor { get; set; }
         public TransactionView Clone()
         {
             return new TransactionView
             {
                 IsSelected = this.IsSelected,
+                SourceAccountNameExtractor = this.SourceAccountNameExtractor,
+                DestinationAccountNameExtractor = this.DestinationAccountNameExtractor,
             };
         }
     }

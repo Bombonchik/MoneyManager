@@ -136,6 +136,14 @@
         x:Key="Rec25"
         CornerRadius="25,25,25,25"
         BackgroundColor="Transparent"/>
+    <RoundRectangle
+        x:Key="Rec15"
+        CornerRadius="15,15,15,15"
+        BackgroundColor="Transparent"/>
+    <RoundRectangle
+        x:Key="Rec10"
+        CornerRadius="10,10,10,10"
+        BackgroundColor="Transparent"/>
 
     <Style Class="Border25ShadowPrimary" TargetType="Border">
 
@@ -165,6 +173,13 @@
         <Setter Property="Shadow" Value="{StaticResource CoolShadowBlackWhiteBig}"/>
         <Setter Property="StrokeThickness" Value="0"/>
         <Setter Property="Padding" Value="14" />
+        <Setter Property="BackgroundColor"  Value="{StaticResource Primary}"/>
+    </Style>
+    <Style Class="DataBorder15ShadowBlackWhite" TargetType="Border">
+
+        <Setter Property="StrokeShape" Value="{StaticResource Rec15}" />
+        <Setter Property="StrokeThickness" Value="0"/>
+        <Setter Property="Padding" Value="8" />
         <Setter Property="BackgroundColor"  Value="{StaticResource Primary}"/>
     </Style>
     <Style Class="Border25ShadowBlackWhite" TargetType="Border">

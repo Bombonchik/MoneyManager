@@ -207,7 +207,7 @@
     </Style>
     <Style Class="Strong" TargetType="Label">
         <Setter Property="FontSize" Value="18"/>
-        <Setter Property="Margin" Value="5, 0, 5, 0"/>
+       
         <Setter Property="FontFamily" Value="Strong"/>
     </Style>
     <Style Class="AccountIdentifingData" TargetType="Label">
@@ -269,7 +269,6 @@
     </Style>
 
     <Style Class="TransactionProperty" TargetType="Grid">
-        <Setter Property="HeightRequest" Value="54"/>
         <Setter Property="ColumnDefinitions" Value=".26*, .74*"/>
     </Style>
 

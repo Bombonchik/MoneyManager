@@ -9,45 +9,47 @@
         <!-- Total balance, monthly income, monthly expenses, average monthly expenses -->
         <Border
             StyleClass="DataBorder25ShadowBlackWhite">
-            <VerticalStackLayout>
-                <Label Text="{Binding ViewHeader}" StyleClass="DataName" FontSize="25"/>
-                <Label Text="Name" StyleClass="DataName" FontFamily="Regular" />
-                <Entry Placeholder="Print Account Name" Keyboard="Text" StyleClass="EntryEdit" MaxLength="16"
+            <ScrollView>
+                <Grid RowDefinitions="auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto">
+                    <Label Text="{Binding ViewHeader}" StyleClass="DataName" FontSize="25"/>
+                    <Label Grid.Row="1" Text="Name" StyleClass="DataName" FontFamily="Regular" />
+                    <Entry Grid.Row="2" Placeholder="Print Account Name" Keyboard="Text" StyleClass="EntryEdit" MaxLength="16"
                                 Text="{Binding NewAccountDisplay.Account.Name}"/>
-                <Label Text="Balance" StyleClass="DataName" FontFamily="Regular"/>
-                <Entry Placeholder="Print Account Balance" Keyboard="Numeric" StyleClass="EntryEdit" MaxLength="10"
+                    <Label Grid.Row="3" Text="Balance" StyleClass="DataName" FontFamily="Regular"/>
+                    <Entry Grid.Row="4" Placeholder="Print Account Balance" Keyboard="Numeric" StyleClass="EntryEdit" MaxLength="10"
                                Text="{Binding NewAccountDisplay.Account.Balance}"/>
 
-                <Label Text="Identifier " StyleClass="DataName" FontFamily="Regular"/>
-                <Label Text="(For example, a credit card number)" StyleClass="TotalAccountDataName" FontSize="12" FontFamily="Regular"/>
-                <Entry Placeholder="Print Identifier" StyleClass="EntryEdit" MaxLength="256"
+                    <Label Grid.Row="5" Text="Identifier " StyleClass="DataName" FontFamily="Regular"/>
+                    <Label Grid.Row="6" Text="(For example, a credit card number)" StyleClass="TotalAccountDataName" FontSize="12" FontFamily="Regular"/>
+                    <Entry Grid.Row="7" Placeholder="Print Identifier" StyleClass="EntryEdit" MaxLength="256"
                                Text="{Binding NewAccountDisplay.Account.Identifier}"/>
 
-                <Label Text="Type" StyleClass="DataName" FontFamily="Regular"/>
-                <CollectionView  
-                        Grid.Row="1" Margin="0,10,0,0"
+                    <Label Grid.Row="8" Text="Type" StyleClass="DataName" FontFamily="Regular"/>
+                    <CollectionView  
+                        Grid.Row="9" Margin="0,10,0,0"
                         ItemsSource="{Binding AccountTypes}"
                         SelectionMode="Single"
                         SelectedItem="{Binding SelectedAccountType}"
                         ItemsUpdatingScrollMode="KeepItemsInView">
-                    <CollectionView.ItemsLayout>
-                        <LinearItemsLayout Orientation="Horizontal"/>
-                    </CollectionView.ItemsLayout>
-                    <CollectionView.ItemTemplate>
-                        <DataTemplate>
-                            <Border            
+                        <CollectionView.ItemsLayout>
+                            <LinearItemsLayout Orientation="Horizontal"/>
+                        </CollectionView.ItemsLayout>
+                        <CollectionView.ItemTemplate>
+                            <DataTemplate>
+                                <Border            
                                 StyleClass="Border25AccountTypes">
-                                <Label Text="{Binding .}" 
+                                    <Label Text="{Binding .}" 
                                     StyleClass="WhiteTextLabel"
                                     HorizontalTextAlignment="Center"
                                     FontSize="15"
                                     Margin="5,0,5,0"/>
-                            </Border>
-                        </DataTemplate>
-                    </CollectionView.ItemTemplate>
-                </CollectionView>
-                <Entry Text="{Binding SelectedAccountType}" Placeholder="Print your own type" Keyboard="Text" StyleClass="EntryEdit" MaxLength="16"/>
-            </VerticalStackLayout>
+                                </Border>
+                            </DataTemplate>
+                        </CollectionView.ItemTemplate>
+                    </CollectionView>
+                    <Entry Grid.Row="10" Text="{Binding SelectedAccountType}" Placeholder="Print your own type" Keyboard="Text" StyleClass="EntryEdit" MaxLength="16"/>
+                </Grid>
+            </ScrollView>
         </Border>
 
 

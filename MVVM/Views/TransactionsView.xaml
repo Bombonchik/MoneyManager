@@ -54,7 +54,7 @@
                                                     <TapGestureRecognizer Command="{Binding Path=BindingContext.OpenEditTransactionCommand, Source={x:Reference RootLayout}}"
                                                                           CommandParameter="{Binding .}"/>
                                                 </Border.GestureRecognizers>
-                                                <Grid ColumnDefinitions=".28*, .46*, .26*" WidthRequest="330">
+                                                <Grid ColumnDefinitions=".28*, .46*, .26*">
                                                     <Label 
                                                         Text="{Binding TransactionView.CategoryNameExtractor, Converter={StaticResource CategoryNameExtractorConverter}}" 
                                                         StyleClass="WhiteTextLabel" 

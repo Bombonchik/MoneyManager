@@ -29,7 +29,6 @@
                     ColumnDefinitions=".53*,.47*"
                     RowDefinitions="*, *"
                     Margin="0,0,-6,0"
-                    WidthRequest="330"
                     BindingContext="{Binding CachedAccountsData}">
 
                     <VerticalStackLayout>
